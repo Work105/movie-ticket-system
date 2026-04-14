@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Select Seats</h2>
+    <p><strong>Movie:</strong> {{ showtime.movie.title }}</p>
+    <p><strong>Date:</strong> {{ showtime.show_date }} | <strong>Time:</strong> {{ showtime.show_time }} | <strong>Price:</strong> Rs.{{ showtime.price }}</p>
+    
+    <form method="post" action="{% url 'confirm_booking' showtime.id %}">
+        {% csrf_token %}
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Available Seats</h4>
+                <div class="seat-grid">
+                    {% for seat in available_seats %}
+                        <label class="seat-available">
+                            <input type="checkbox" name="seats" value="{{ seat.seat_number }}">
+                            {{ seat.seat_number }}
+                        </label>
+                    {% empty %}
+                        <p>No available seats</p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <h4>Booked Seats</h4>
+                <div class="seat-grid">
+                    {% for seat in booked_seats %}
+                        <span class="seat-booked">{{ seat.seat_number }}</span>
+                    {% empty %}
+                        <p>No booked seats</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-3">Continue to Confirm</button>
+    </form>
+</div>
+
+<style>
+    .seat-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .seat-available {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: inline-block;
+    }
+    .seat-available input {
+        margin-right: 5px;
+    }
+    .seat-booked {
+        background-color: #dc3545;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        display: inline-block;
+    }
+</style>
+{% endblock %}

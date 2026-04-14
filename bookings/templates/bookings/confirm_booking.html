@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Confirm Your Booking</h2>
+    
+    <div class="card">
+        <div class="card-body">
+            <h4>Booking Details</h4>
+            <p><strong>Movie:</strong> Movie Name</p>
+            <p><strong>Date:</strong> 2024-01-01</p>
+            <p><strong>Time:</strong> 7:00 PM</p>
+            <p><strong>Seats:</strong> A1, A2</p>
+            <p><strong>Total Price:</strong> $20.00</p>
+        </div>
+    </div>
+    
+    <form method="post" action="{% url 'complete_booking' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success mt-3">Confirm Booking</button>
+        <a href="{% url 'select_seats' 1 %}" class="btn btn-secondary mt-3">Go Back</a>
+    </form>
+</div>
+{% endblock %}

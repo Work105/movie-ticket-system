@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>My Booking History</h2>
+    
+    {% if bookings %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Movie</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Seat</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.showtime.movie.title }}</td>
+                    <td>{{ booking.showtime.show_date }}</td>
+                    <td>{{ booking.showtime.show_time }}</td>
+                    <td>{{ booking.seat.seat_number }}</td>
+                    <td>Rs. {{ booking.total_price }}</td>
+                    <td>
+                        {% if booking.status == 'confirmed' %}
+                            <span class="badge bg-success">Confirmed</span>
+                        {% else %}
+                            <span class="badge bg-danger">Cancelled</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if booking.status == 'confirmed' %}
+                            <a href="{% url 'cancel_booking' booking.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this booking?')">Cancel</a>
+                        {% else %}
+                            <span class="text-muted">Cancelled</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">No bookings yet</div>
+    {% endif %}
+    
+    <a href="/" class="btn btn-primary">Back to Home</a>
+</div>
+{% endblock %}
