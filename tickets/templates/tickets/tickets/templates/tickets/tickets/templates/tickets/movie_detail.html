@@ -1,0 +1,48 @@
+{% extends 'tickets/base.html' %}
+{% block title %}{{ movie.title }} — CineBook{% endblock %}
+{% block content %}
+
+<div class="row mb-5">
+  <div class="col-md-3">
+    {% if movie.poster %}
+      <img src="{{ movie.poster.url }}" class="img-fluid rounded-3" alt="{{ movie.title }}">
+    {% else %}
+      <div style="height:350px; background:#0f3460; border-radius:12px; display:flex; align-items:center; justify-content:center;">
+        <i class="bi bi-film" style="font-size:5rem; color:#e94560;"></i>
+      </div>
+    {% endif %}
+  </div>
+  <div class="col-md-9">
+    <span class="badge badge-genre mb-2">{{ movie.get_genre_display }}</span>
+    <h1 class="fw-bold">{{ movie.title }}</h1>
+    <p class="text-muted">
+      <i class="bi bi-clock"></i> {{ movie.duration_minutes }} minutes &nbsp;|&nbsp;
+      <i class="bi bi-calendar"></i> {{ movie.release_date }}
+    </p>
+    <p>{{ movie.description }}</p>
+  </div>
+</div>
+
+<h3 class="mb-3">Showtimes</h3>
+{% regroup showtimes by show_date as showtimes_by_date %}
+{% for date_group in showtimes_by_date %}
+  <h5 class="mt-4 text-warning">{{ date_group.grouper|date:"l, F d, Y" }}</h5>
+  <div class="row g-3">
+    {% for showtime in date_group.list %}
+    <div class="col-md-3">
+      <div class="booking-card p-3 text-center">
+        <div class="fs-4 fw-bold" style="color:#e94560;">{{ showtime.show_time|time:"g:i A" }}</div>
+        <div class="small text-muted mt-1">{{ showtime.theatre.name }}</div>
+        <div class="small text-muted">{{ showtime.theatre.location }}</div>
+        <div class="mt-2 text-warning fw-bold">Rs. {{ showtime.price }}</div>
+        <div class="small text-muted">{{ showtime.available_seats }} seats left</div>
+        <a href="{% url 'seat_selection' showtime.id %}" class="btn btn-primary btn-sm w-100 mt-3">Select Seats</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% empty %}
+  <p class="text-muted">No showtimes available.</p>
+{% endfor %}
+
+{% endblock %}
