@@ -1,0 +1,41 @@
+{% extends 'tickets/base.html' %}
+{% block title %}All Movies — CineBook{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>All Movies</h2>
+  <div>
+    <a href="{% url 'movie_list' %}" class="btn btn-sm {% if not selected_genre %}btn-primary{% else %}btn-outline-secondary{% endif %} me-1">All</a>
+    {% for value, label in movies.model.GENRE_CHOICES %}
+      <a href="?genre={{ value }}" class="btn btn-sm {% if selected_genre == value %}btn-primary{% else %}btn-outline-secondary{% endif %} me-1">{{ label }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="row g-4">
+  {% for movie in movies %}
+  <div class="col-md-3">
+    <div class="card movie-card h-100">
+      {% if movie.poster %}
+        <img src="{{ movie.poster.url }}" class="card-img-top" alt="{{ movie.title }}">
+      {% else %}
+        <div style="height:260px; background:#0f3460; display:flex; align-items:center; justify-content:center; border-radius:12px 12px 0 0;">
+          <i class="bi bi-film" style="font-size:3rem; color:#e94560;"></i>
+        </div>
+      {% endif %}
+      <div class="card-body">
+        <span class="badge badge-genre mb-1">{{ movie.get_genre_display }}</span>
+        <h6 class="card-title mt-1">{{ movie.title }}</h6>
+        <p class="text-muted small"><i class="bi bi-clock"></i> {{ movie.duration_minutes }} min</p>
+      </div>
+      <div class="card-footer bg-transparent border-0 pb-3">
+        <a href="{% url 'movie_detail' movie.id %}" class="btn btn-primary btn-sm w-100">View Showtimes</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p class="text-muted">No movies found.</p>
+  {% endfor %}
+</div>
+
+{% endblock %}
