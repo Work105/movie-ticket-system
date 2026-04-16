@@ -1,0 +1,98 @@
+{% extends 'tickets/base.html' %}
+{% block title %}Select Seats — CineBook{% endblock %}
+{% block content %}
+
+<h2 class="mb-1">{{ showtime.movie.title }}</h2>
+<p class="text-muted">
+  {{ showtime.theatre.name }} &nbsp;|&nbsp;
+  {{ showtime.show_date|date:"F d, Y" }} at {{ showtime.show_time|time:"g:i A" }} &nbsp;|&nbsp;
+  Rs. {{ showtime.price }} per seat
+</p>
+
+<div class="text-center my-4">
+  <div class="screen mx-auto" style="max-width:400px;"></div>
+  <small class="text-muted">SCREEN</small>
+</div>
+
+<form method="post" action="{% url 'confirm_booking' showtime.id %}" id="booking-form">
+  {% csrf_token %}
+  <div class="text-center mb-4">
+    {% for row, seats in seat_map.items %}
+    <div class="mb-1">
+      <span class="text-muted me-2" style="display:inline-block;width:16px;">{{ row }}</span>
+      {% for seat in seats %}
+        {% if seat.is_booked %}
+          <span class="seat booked">{{ seat.number }}</span>
+        {% else %}
+          <span class="seat" data-id="{{ seat.id }}" data-price="{{ showtime.price }}" onclick="toggleSeat(this)">{{ seat.number }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="d-flex justify-content-center gap-4 mb-4">
+    <span><span class="seat" style="cursor:default;">1</span> Available</span>
+    <span><span class="seat selected" style="cursor:default;">1</span> Selected</span>
+    <span><span class="seat booked" style="cursor:default;">1</span> Booked</span>
+  </div>
+
+  <div class="text-center">
+    <div class="mb-3" id="summary" style="display:none;">
+      <span class="text-muted">Selected: </span>
+      <span id="seat-names" class="fw-bold text-warning"></span>
+      &nbsp;|&nbsp;
+      <span class="text-muted">Total: </span>
+      <span id="total-price" class="fw-bold text-warning"></span>
+    </div>
+    <div id="hidden-inputs"></div>
+    <button type="submit" class="btn btn-primary btn-lg px-5" id="book-btn" disabled>Confirm Booking</button>
+  </div>
+</form>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  let selectedSeats = {};
+
+  function toggleSeat(el) {
+    const id = el.dataset.id;
+    const price = parseFloat(el.dataset.price);
+    if (selectedSeats[id]) {
+      delete selectedSeats[id];
+      el.classList.remove('selected');
+    } else {
+      selectedSeats[id] = price;
+      el.classList.add('selected');
+    }
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const ids = Object.keys(selectedSeats);
+    const total = ids.reduce((sum, id) => sum + selectedSeats[id], 0);
+    const hiddenInputs = document.getElementById('hidden-inputs');
+    const bookBtn = document.getElementById('book-btn');
+
+    hiddenInputs.innerHTML = '';
+    ids.forEach(id => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'seats';
+      input.value = id;
+      hiddenInputs.appendChild(input);
+    });
+
+    if (ids.length > 0) {
+      document.getElementById('summary').style.display = 'block';
+      document.getElementById('seat-names').textContent = ids.length + ' seat(s)';
+      document.getElementById('total-price').textContent = 'Rs. ' + total.toFixed(2);
+      bookBtn.disabled = false;
+    } else {
+      document.getElementById('summary').style.display = 'none';
+      bookBtn.disabled = true;
+    }
+  }
+</script>
+{% endblock %}
