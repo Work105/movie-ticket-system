@@ -1,4 +1,5 @@
-from django.db import models
+# Database models for Movie Ticket System
+# Created by Wimalsha - Database Administratorfrom django.db import models
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
