@@ -4,7 +4,9 @@ from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from .models import Booking
-
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import Booking
 
 
 def test_view(request):
@@ -37,5 +39,21 @@ def download_ticket(request, booking_id):
 
     doc.build(elements)
     return response
+
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+
+    # Optional: prevent cancelling already cancelled bookings
+    if booking.status == 'cancelled':
+        messages.warning(request, "This booking is already cancelled.")
+        return redirect('booking_confirmation', booking_id=booking.id)
+
+    # Update status
+    booking.status = 'cancelled'
+    booking.save()
+
+    messages.success(request, "Booking cancelled successfully.")
+
+    return redirect('booking_confirmation', booking_id=booking.id)
 
 # Create your views here.
