@@ -7,19 +7,26 @@ from .models import Booking
 
 @login_required
 def select_seats(request, showtime_id):
-    showtime = get_object_or_404(Showtime, id=showtime_id)
-    all_seats = Seat.objects.filter(showtime=showtime)
-    
-    # Separate available and booked seats
-    available_seats = [s for s in all_seats if not s.is_booked]
-    booked_seats = [s for s in all_seats if s.is_booked]
-    
-    context = {
-        'showtime': showtime,
-        'available_seats': available_seats,
-        'booked_seats': booked_seats,
-    }
-    return render(request, 'bookings/select_seats.html', context)
+        from movies.models import Showtime, Seat
+        
+        try:
+            showtime = Showtime.objects.get(id=showtime_id)
+            all_seats = Seat.objects.filter(showtime=showtime)
+            
+            # Get lists of seat numbers
+            booked_seat_numbers = [seat.seat_number for seat in all_seats if seat.is_booked]
+            available_seat_numbers = [seat.seat_number for seat in all_seats if not seat.is_booked]
+            
+        except Showtime.DoesNotExist:
+            messages.error(request, "Showtime not found!")
+            return redirect('booking_history')
+        
+        context = {
+            'showtime': showtime,
+            'available_seat_numbers': available_seat_numbers,
+            'booked_seat_numbers': booked_seat_numbers,
+        }
+        return render(request, 'bookings/select_seats.html', context)
 
 @login_required
 def confirm_booking(request, showtime_id):
