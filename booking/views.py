@@ -19,6 +19,7 @@ def showtimes(request, movie_id):
         'showtimes': showtimes
     })
 
+# ========== REGISTER VIEW ==========
 
 def register(request):
     if request.method == 'POST':
@@ -41,3 +42,25 @@ def register(request):
         return redirect('home')
     
     return render(request, 'booking/register.html')
+
+# ========== LOGIN & LOGOUT VIEWS ==========
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            messages.success(request, f'Welcome back {username}!')
+            return redirect('home')
+        else:
+            messages.error(request, 'Invalid username or password')
+    
+    return render(request, 'booking/login.html')
+
+def user_logout(request):
+    logout(request)
+    messages.info(request, 'You have been logged out')
+    return redirect('home')
