@@ -1,6 +1,12 @@
 {% extends 'tickets/base.html' %}
-{% block title %}Booking Confirmed — CineBook{% endblock %}
+{% block title %}Booking Confirmed — EliteCineBook{% endblock %}
 {% block content %}
+<style>
+.btn-outline-light:hover {
+  background-color: #e94560;
+  border-color: #e94560;
+}
+</style>
 
 <div class="text-center my-5">
   <i class="bi bi-check-circle-fill text-success" style="font-size:4rem;"></i>
@@ -29,5 +35,20 @@
   <a href="{% url 'my_bookings' %}" class="btn btn-outline-light me-2">My Bookings</a>
   <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
 </div>
-
+<div class="text-center mt-4">
+  <a href="{% url 'download_ticket' booking.id %}" class="btn btn-outline-light px-4">
+    <i class="bi bi-download"></i> Download Ticket
+  </a>
+</div>
+<div class="text-center mt-3">
+  {% if booking.status != "cancelled" %}
+    <a href="{% url 'cancel_booking' booking.id %}" 
+       class="btn btn-danger px-4"
+       onclick="return confirm('Are you sure you want to cancel this booking?');">
+       Cancel Booking
+    </a>
+  {% else %}
+    <span class="badge bg-secondary">Booking Cancelled</span>
+  {% endif %}
+</div>
 {% endblock %}
