@@ -4,8 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
-from .models import Movie, ShowTime, Booking
-
+from .models import Movie, ShowTime, Booking   
+from django.shortcuts import render, redirect, get_object_or_404
 
 def home(request):
     movies = Movie.objects.all()
@@ -64,3 +64,40 @@ def user_logout(request):
     logout(request)
     messages.info(request, 'You have been logged out')
     return redirect('home')
+
+# ========== BOOK TICKET VIEW ==========
+
+@login_required
+def book_ticket(request, showtime_id):
+    from .models import ShowTime, Booking
+    showtime = get_object_or_404(ShowTime, id=showtime_id)
+    
+    if request.method == 'POST':
+        try:
+            seats = int(request.POST.get('seats', 0))
+            
+            if seats <= 0:
+                messages.error(request, 'Please select at least 1 seat')
+                return redirect('book_ticket', showtime_id=showtime_id)
+            
+            if not showtime.can_book(seats):
+                messages.error(request, f'Only {showtime.seats_available} seats available')
+                return redirect('book_ticket', showtime_id=showtime_id)
+            
+            with transaction.atomic():
+                booking = Booking.objects.create(
+                    user=request.user,
+                    showtime=showtime,
+                    seats=seats,
+                    total_price=showtime.price * seats
+                )
+                showtime.seats_available -= seats
+                showtime.save()
+            
+            messages.success(request, f'Booked {seats} ticket(s)! Total: ${booking.total_price}')
+            return redirect('my_bookings')
+            
+        except ValueError:
+            messages.error(request, 'Invalid number of seats')
+    
+    return render(request, 'booking/book_ticket.html', {'showtime': showtime})
