@@ -110,3 +110,24 @@ def my_bookings(request):
         'showtime', 'showtime__movie', 'showtime__theater'
     ).order_by('-booked_at')
     return render(request, 'booking/my_bookings.html', {'bookings': bookings})
+
+# ========== CANCEL BOOKING VIEW ==========
+
+@login_required
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    
+    if booking.status == 'cancelled':
+        messages.warning(request, 'Booking already cancelled')
+        return redirect('my_bookings')
+    
+    with transaction.atomic():
+        # Restore seats
+        booking.showtime.seats_available += booking.seats
+        booking.showtime.save()
+        # Update booking status
+        booking.status = 'cancelled'
+        booking.save()
+    
+    messages.success(request, f'Booking cancelled. {booking.seats} seats restored.')
+    return redirect('my_bookings')
