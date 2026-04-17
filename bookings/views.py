@@ -27,17 +27,19 @@ def select_seats(request, showtime_id):
             'booked_seat_numbers': booked_seat_numbers,
         }
         return render(request, 'bookings/select_seats.html', context)
-
+        
 @login_required
 def confirm_booking(request, showtime_id):
     if request.method == 'POST':
-        seat_numbers = request.POST.getlist('seats')  # Get selected seats
+        seat_numbers = request.POST.getlist('seats')
         
         if not seat_numbers:
             messages.error(request, "Please select at least one seat")
             return redirect('select_seats', showtime_id=showtime_id)
         
-        # Validate booking
+        from movies.models import Showtime, Seat
+        from .utils import validate_booking
+        
         is_valid, message, available_seats = validate_booking(
             request, showtime_id, seat_numbers
         )
@@ -46,11 +48,10 @@ def confirm_booking(request, showtime_id):
             messages.error(request, message)
             return redirect('select_seats', showtime_id=showtime_id)
         
-        # Calculate total price
-        showtime = get_object_or_404(Showtime, id=showtime_id)
+        showtime = Showtime.objects.get(id=showtime_id)
         total_price = showtime.price * len(available_seats)
         
-        # Store in session for confirmation
+        # Store in session
         request.session['pending_booking'] = {
             'showtime_id': showtime_id,
             'seat_ids': [seat.id for seat in available_seats],
@@ -66,6 +67,7 @@ def confirm_booking(request, showtime_id):
     
     return redirect('select_seats', showtime_id=showtime_id)
 
+        
 @login_required
 def complete_booking(request):
     pending = request.session.get('pending_booking')
