@@ -1,6 +1,3 @@
-
-
-<<<<<<< HEAD
 def test_view(request):
     return render(request, 'tickets/test.html')
 
@@ -45,7 +42,4 @@ def cancel_booking(request, booking_id):
     booking.save()
 
     messages.success(request, "Booking cancelled successfully.")
-=======
 
-# Create your views here.
->>>>>>> d38d59bcbdef07bfe51fa80f88a7b12fe87ff514
