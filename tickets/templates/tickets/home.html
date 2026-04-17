@@ -1,5 +1,5 @@
 {% extends 'tickets/base.html' %}
-{% block title %}EliteCineBook — Now Showing{% endblock %}
+{% block title %}CineBook — Now Showing{% endblock %}
 {% block content %}
 
 <div class="text-center py-5 mb-4" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 16px;">
@@ -9,30 +9,47 @@
 </div>
 
 <h3 class="mb-4">Featured Movies</h3>
+
 <div class="row g-4">
   {% for movie in movies %}
-  <div class="col-md-4">
-    <div class="card movie-card h-100">
-      {% if movie.poster %}
-        <img src="{{ movie.poster.url }}" class="card-img-top" alt="{{ movie.title }}">
-      {% else %}
-        <div style="height:300px; background:#0f3460; display:flex; align-items:center; justify-content:center; border-radius:12px 12px 0 0;">
-          <i class="bi bi-film" style="font-size:4rem; color:#e94560;"></i>
+    <div class="col-md-4">
+      <div class="card movie-card h-100 shadow-sm">
+
+        {% if movie.poster %}
+          <img src="{{ movie.poster.url }}" class="card-img-top" alt="{{ movie.title }}">
+        {% else %}
+          <div style="height:300px; background:#0f3460; display:flex; align-items:center; justify-content:center; border-radius:12px 12px 0 0;">
+            <i class="bi bi-film" style="font-size:4rem; color:#e94560;"></i>
+          </div>
+        {% endif %}
+
+        <div class="card-body">
+          <span class="badge bg-secondary mb-2">
+            {{ movie.get_genre_display }}
+          </span>
+
+          <h5 class="card-title">{{ movie.title }}</h5>
+
+          <p class="card-text text-muted small">
+            {{ movie.description|truncatewords:15 }}
+          </p>
+
+          <p class="text-muted small">
+            <i class="bi bi-clock"></i> {{ movie.duration_minutes }} min
+          </p>
         </div>
-      {% endif %}
-      <div class="card-body">
-        <span class="badge badge-genre mb-2">{{ movie.get_genre_display }}</span>
-        <h5 class="card-title">{{ movie.title }}</h5>
-        <p class="card-text text-muted small">{{ movie.description|truncatewords:15 }}</p>
-        <p class="text-muted small"><i class="bi bi-clock"></i> {{ movie.duration_minutes }} min</p>
-      </div>
-      <div class="card-footer bg-transparent border-0 pb-3">
-        <a href="{% url 'movie_detail' movie.id %}" class="btn btn-primary w-100">Book Tickets</a>
+
+        <div class="card-footer bg-transparent border-0 pb-3">
+          <a href="{% url 'movie_detail' movie.id %}" class="btn btn-primary w-100">
+            Book Tickets
+          </a>
+        </div>
+
       </div>
     </div>
-  </div>
+
   {% empty %}
-  <p class="text-muted">No movies available right now.</p>
+    <p class="text-muted">No movies available right now.</p>
   {% endfor %}
 </div>
 
