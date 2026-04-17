@@ -95,16 +95,19 @@ def complete_booking(request):
 def booking_history(request):
     bookings = Booking.objects.filter(user=request.user).order_by('-booking_date')
     
-    # Calculate total amount
+    # Calculate total amount and total tickets
     total_amount = 0
+    total_tickets = 0
+    
     for booking in bookings:
         if booking.status == 'confirmed':
             total_amount += float(booking.total_price)
+            total_tickets += 1
     
     context = {
         'bookings': bookings,
         'total_amount': total_amount,
-        'total_tickets': bookings.count(),
+        'total_tickets': total_tickets,
     }
     return render(request, 'bookings/booking_history.html', context)
 
