@@ -1,14 +1,6 @@
-from django.shortcuts import render
-from django.shortcuts import render
-from django.http import HttpResponse
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
-from .models import Booking
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib import messages
-from .models import Booking
 
 
+<<<<<<< HEAD
 def test_view(request):
     return render(request, 'tickets/test.html')
 
@@ -53,3 +45,7 @@ def cancel_booking(request, booking_id):
     booking.save()
 
     messages.success(request, "Booking cancelled successfully.")
+=======
+
+# Create your views here.
+>>>>>>> d38d59bcbdef07bfe51fa80f88a7b12fe87ff514
