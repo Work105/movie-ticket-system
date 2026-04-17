@@ -101,3 +101,12 @@ def book_ticket(request, showtime_id):
             messages.error(request, 'Invalid number of seats')
     
     return render(request, 'booking/book_ticket.html', {'showtime': showtime})
+
+# ========== MY BOOKINGS VIEW ==========
+
+@login_required
+def my_bookings(request):
+    bookings = Booking.objects.filter(user=request.user).select_related(
+        'showtime', 'showtime__movie', 'showtime__theater'
+    ).order_by('-booked_at')
+    return render(request, 'booking/my_bookings.html', {'bookings': bookings})
