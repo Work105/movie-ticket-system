@@ -1,3 +1,4 @@
+
 {% extends 'tickets/base.html' %}
 {% block title %}Login — CineBook{% endblock %}
 {% block content %}
@@ -5,24 +6,85 @@
 <div class="row justify-content-center">
   <div class="col-md-4">
     <div class="booking-card p-4">
-      <h3 class="text-center mb-4 fw-bold" style="color:#e94560;">Login</h3>
+
+      <!-- Logo & Title -->
+      <div class="text-center mb-4">
+        <i class="bi bi-camera-reels-fill" style="font-size:2.5rem; color:#db405c;"></i>
+        <h3 class="fw-bold mt-2" style="color:#e6c5cb;">Welcome Back</h3>
+        <p class="text-muted small mb-0">Sign in to your CineBook account</p>
+      </div>
+
+      <!-- Error messages -->
+      {% for message in messages %}
+        <div class="alert alert-danger d-flex align-items-center py-2 px-3" style="font-size:13px; border-radius:8px;">
+          <i class="bi bi-exclamation-circle me-2"></i> {{ message }}
+        </div>
+      {% endfor %}
+
       <form method="post">
         {% csrf_token %}
+
+        <!-- Username -->
         <div class="mb-3">
-          <label class="form-label text-muted">Username</label>
-          <input type="text" name="username" class="form-control bg-dark text-light border-secondary">
+          <label class="form-label text-muted small">Username</label>
+          <div class="input-icon">
+            <i class="bi bi-person"></i>
+            <input type="text" name="username" class="form-control bg-dark text-light border-secondary" placeholder="Enter your username">
+          </div>
         </div>
+
+        <!-- Password with toggle -->
         <div class="mb-3">
-          <label class="form-label text-muted">Password</label>
-          <input type="password" name="password" class="form-control bg-dark text-light border-secondary">
+          <label class="form-label text-muted small">Password</label>
+          <div class="input-icon">
+            <i class="bi bi-lock"></i>
+            <input type="password" name="password" id="passwordInput"
+                   class="form-control bg-dark text-light border-secondary"
+                   placeholder="Enter your password" style="padding-right:40px;">
+            <button type="button" class="toggle-password" onclick="togglePassword()">
+              <i class="bi bi-eye" id="eyeIcon"></i>
+            </button>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
+
+        <!-- Remember me -->
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="rememberMe">
+            <label class="form-check-label text-muted small" for="rememberMe">Remember me</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Login
+        </button>
+
       </form>
-      <p class="text-center text-muted mt-3 small">
+
+      <div class="divider">or</div>
+
+      <p class="text-center text-muted small mb-0">
         No account? <a href="{% url 'register' %}" style="color:#e94560;">Register here</a>
       </p>
+
     </div>
   </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function togglePassword() {
+    const input = document.getElementById('passwordInput');
+    const icon = document.getElementById('eyeIcon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.replace('bi-eye', 'bi-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.replace('bi-eye-slash', 'bi-eye');
+    }
+  }
+</script>
 {% endblock %}
