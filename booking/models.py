@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from datetime import date, time as datetime_time
 from django.utils import timezone
+from datetime import datetime
 
 class Movie(models.Model):
     title = models.CharField(max_length=200)
@@ -40,9 +41,9 @@ class ShowTime(models.Model):
         return f"{self.movie.title} - {self.date} {self.time} at {self.theater.name}"
     
     def is_upcoming(self):
-        """Check if showtime is in the future"""
-        show_datetime = datetime.combine(self.date, self.time)
-        return show_datetime > timezone.now()
+       """Check if showtime is in the future"""
+       from datetime import date
+       return self.date >= date.today()
     
     def can_book(self, requested_seats):
         """Check if requested seats are available"""
