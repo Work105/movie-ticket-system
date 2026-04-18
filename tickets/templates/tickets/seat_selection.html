@@ -1,5 +1,5 @@
 {% extends 'tickets/base.html' %}
-{% block title %}Select Seats — CineBook{% endblock %}
+{% block title %}Select Seats — EliteCineBook{% endblock %}
 {% block content %}
 
 <h2 class="mb-1">{{ showtime.movie.title }}</h2>
@@ -46,7 +46,15 @@
       <span id="total-price" class="fw-bold text-warning"></span>
     </div>
     <div id="hidden-inputs"></div>
-    <button type="submit" class="btn btn-primary btn-lg px-5" id="book-btn" disabled>Confirm Booking</button>
+    <div class="d-flex justify-content-center gap-3">
+      <button type="button" class="btn btn-outline-secondary btn-lg px-4" id="clear-btn"
+              onclick="clearSelection()" style="display:none;">
+        <i class="bi bi-x-circle me-1"></i> Clear
+      </button>
+      <button type="submit" class="btn btn-primary btn-lg px-5" id="book-btn" disabled>
+        Confirm Booking
+      </button>
+    </div>
   </div>
 </form>
 
@@ -69,11 +77,18 @@
     updateSummary();
   }
 
+  function clearSelection() {
+    selectedSeats = {};
+    document.querySelectorAll('.seat.selected').forEach(el => el.classList.remove('selected'));
+    updateSummary();
+  }
+
   function updateSummary() {
     const ids = Object.keys(selectedSeats);
     const total = ids.reduce((sum, id) => sum + selectedSeats[id], 0);
     const hiddenInputs = document.getElementById('hidden-inputs');
     const bookBtn = document.getElementById('book-btn');
+    const clearBtn = document.getElementById('clear-btn');
 
     hiddenInputs.innerHTML = '';
     ids.forEach(id => {
@@ -89,9 +104,11 @@
       document.getElementById('seat-names').textContent = ids.length + ' seat(s)';
       document.getElementById('total-price').textContent = 'Rs. ' + total.toFixed(2);
       bookBtn.disabled = false;
+      clearBtn.style.display = 'inline-block';
     } else {
       document.getElementById('summary').style.display = 'none';
       bookBtn.disabled = true;
+      clearBtn.style.display = 'none';
     }
   }
 </script>
