@@ -1,6 +1,11 @@
 {% extends 'tickets/base.html' %}
-{% block title %}{{ movie.title }} — CineBook{% endblock %}
+{% block title %}{{ movie.title }} — EliteCineBook{% endblock %}
 {% block content %}
+
+<!-- Back button -->
+<a href="{% url 'movie_list' %}" class="btn btn-outline-secondary btn-sm mb-4">
+  <i class="bi bi-arrow-left"></i> Back to Movies
+</a>
 
 <div class="row mb-5">
   <div class="col-md-3">
@@ -15,6 +20,17 @@
   <div class="col-md-9">
     <span class="badge badge-genre mb-2">{{ movie.get_genre_display }}</span>
     <h1 class="fw-bold">{{ movie.title }}</h1>
+
+    <!-- Star rating -->
+    <div class="mb-2" style="color:#f5c518; font-size:1.2rem;">
+      <i class="bi bi-star-fill"></i>
+      <i class="bi bi-star-fill"></i>
+      <i class="bi bi-star-fill"></i>
+      <i class="bi bi-star-fill"></i>
+      <i class="bi bi-star-half"></i>
+      <span class="text-muted small ms-1">4.5 / 5</span>
+    </div>
+
     <p class="text-muted">
       <i class="bi bi-clock"></i> {{ movie.duration_minutes }} minutes &nbsp;|&nbsp;
       <i class="bi bi-calendar"></i> {{ movie.release_date }}
