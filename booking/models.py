@@ -16,7 +16,7 @@ class Movie(models.Model):
         return self.title
     
     class Meta:
-        ordering = ['-release_date']
+        ordering = ['-release_date']  # Newest movies first
 
 
 class Theater(models.Model):
@@ -26,6 +26,9 @@ class Theater(models.Model):
     
     def __str__(self):
         return self.name
+    
+    class Meta:
+        ordering = ['name']  # Alphabetical order by name
 
 
 class ShowTime(models.Model):
@@ -52,7 +55,7 @@ class ShowTime(models.Model):
         return self.seats_available >= requested_seats and self.is_upcoming()
     
     class Meta:
-        ordering = ['date', 'time']
+        ordering = ['date', 'time']  # Earliest shows first
 
 
 class Booking(models.Model):
@@ -79,4 +82,4 @@ class Booking(models.Model):
         return f"{self.user.username} - {self.showtime.movie.title} ({self.seats} seats)"
     
     class Meta:
-        ordering = ['-booked_at']
+        ordering = ['-booked_at']  # Most recent bookings first
