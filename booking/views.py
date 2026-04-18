@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
 from .models import Movie, ShowTime, Booking   
-from django.shortcuts import render, redirect, get_object_or_404
+from datetime import date
 
 def home(request):
     movies = Movie.objects.all()
@@ -69,12 +69,21 @@ def user_logout(request):
 
 @login_required
 def book_ticket(request, showtime_id):
-    from .models import ShowTime, Booking
     showtime = get_object_or_404(ShowTime, id=showtime_id)
+    
+    # SIMPLE DATE COMPARISON - THIS WILL WORK
+    today = date.today()
+    
+    if showtime.date < today:
+        messages.error(request, f'Cannot book tickets for past showtimes! (Show date: {showtime.date}, Today: {today})')
+        return redirect('showtimes', movie_id=showtime.movie.id)
     
     if request.method == 'POST':
         try:
             seats = int(request.POST.get('seats', 0))
+            if seats > 10:
+                messages.error(request, 'Maximum 10 seats allowed per booking')
+                return redirect('book_ticket', showtime_id=showtime_id)
             
             if seats <= 0:
                 messages.error(request, 'Please select at least 1 seat')
@@ -122,10 +131,8 @@ def cancel_booking(request, booking_id):
         return redirect('my_bookings')
     
     with transaction.atomic():
-        # Restore seats
         booking.showtime.seats_available += booking.seats
         booking.showtime.save()
-        # Update booking status
         booking.status = 'cancelled'
         booking.save()
     
