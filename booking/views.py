@@ -69,21 +69,30 @@ def user_logout(request):
 
 @login_required
 def book_ticket(request, showtime_id):
+    from .models import ShowTime, Booking
+    from datetime import date
+    
     showtime = get_object_or_404(ShowTime, id=showtime_id)
     
-    # SIMPLE DATE COMPARISON - THIS WILL WORK
-    today = date.today()
+    # Prevent past bookings
+    if showtime.date < date.today():
+        messages.error(request, f'Cannot book tickets for past showtimes!')
+        return redirect('showtimes', movie_id=showtime.movie.id)
     
-    if showtime.date < today:
-        messages.error(request, f'Cannot book tickets for past showtimes! (Show date: {showtime.date}, Today: {today})')
+    # NEW: Prevent duplicate active bookings
+    existing_booking = Booking.objects.filter(
+        user=request.user, 
+        showtime=showtime, 
+        status='confirmed'
+    ).exists()
+    
+    if existing_booking:
+        messages.error(request, 'You already have a booking for this showtime!')
         return redirect('showtimes', movie_id=showtime.movie.id)
     
     if request.method == 'POST':
         try:
             seats = int(request.POST.get('seats', 0))
-            if seats > 10:
-                messages.error(request, 'Maximum 10 seats allowed per booking')
-                return redirect('book_ticket', showtime_id=showtime_id)
             
             if seats <= 0:
                 messages.error(request, 'Please select at least 1 seat')
