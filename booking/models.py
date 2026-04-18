@@ -3,15 +3,14 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from datetime import date, time as datetime_time
 from django.utils import timezone
-from datetime import datetime
 
 class Movie(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     duration = models.IntegerField(help_text="Duration in minutes")
     release_date = models.DateField()
-    poster_url = models.URLField(blank=True, null=True)  # Added for frontend
-    genre = models.CharField(max_length=100, blank=True)  # Added for better UI
+    poster_url = models.URLField(blank=True, null=True)
+    genre = models.CharField(max_length=100, blank=True)
     
     def __str__(self):
         return self.title
@@ -35,15 +34,18 @@ class ShowTime(models.Model):
     date = models.DateField()
     time = models.TimeField()
     seats_available = models.IntegerField()
-    price = models.DecimalField(max_digits=6, decimal_places=2, default=12.00)  # Added price
+    price = models.DecimalField(max_digits=6, decimal_places=2, default=12.00)
     
     def __str__(self):
         return f"{self.movie.title} - {self.date} {self.time} at {self.theater.name}"
     
     def is_upcoming(self):
-       """Check if showtime is in the future"""
-       from datetime import date
-       return self.date >= date.today()
+        """
+        Check if showtime is in the future.
+        Returns True if show date is today or in the future.
+        """
+        from datetime import date
+        return self.date >= date.today()
     
     def can_book(self, requested_seats):
         """Check if requested seats are available"""
