@@ -115,10 +115,26 @@ def book_ticket(request, showtime_id):
 
 @login_required
 def my_bookings(request):
-    bookings = Booking.objects.filter(user=request.user).select_related(
+    from datetime import date
+    
+    all_bookings = Booking.objects.filter(user=request.user).select_related(
         'showtime', 'showtime__movie', 'showtime__theater'
     ).order_by('-booked_at')
-    return render(request, 'booking/my_bookings.html', {'bookings': bookings})
+    
+    # Separate upcoming and past bookings
+    upcoming_bookings = []
+    past_bookings = []
+    
+    for booking in all_bookings:
+        if booking.showtime.date >= date.today() and booking.status == 'confirmed':
+            upcoming_bookings.append(booking)
+        else:
+            past_bookings.append(booking)
+    
+    return render(request, 'booking/my_bookings.html', {
+        'upcoming_bookings': upcoming_bookings,
+        'past_bookings': past_bookings
+    })
 
 # ========== CANCEL BOOKING VIEW ==========
 

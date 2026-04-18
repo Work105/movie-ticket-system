@@ -16,7 +16,9 @@
         {% endfor %}
     {% endif %}
     
-    {% if bookings %}
+    <!-- UPCOMING BOOKINGS -->
+    <h3 class="mt-4 text-success">📅 Upcoming Bookings</h3>
+    {% if upcoming_bookings %}
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
                 <tr>
@@ -26,12 +28,46 @@
                     <th>Time</th>
                     <th>Seats</th>
                     <th>Total Price</th>
-                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                {% for booking in bookings %}
+                {% for booking in upcoming_bookings %}
+                <tr>
+                    <td>{{ booking.showtime.movie.title }}</td>
+                    <td>{{ booking.showtime.theater.name }}</td>
+                    <td>{{ booking.showtime.date }}</td>
+                    <td>{{ booking.showtime.time }}</td>
+                    <td>{{ booking.seats }}</td>
+                    <td>${{ booking.total_price }}</td>
+                    <td>
+                        <a href="{% url 'cancel_booking' booking.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Cancel this booking?')">Cancel</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No upcoming bookings.</p>
+    {% endif %}
+    
+    <!-- PAST BOOKINGS -->
+    <h3 class="mt-4 text-secondary">📜 Past Bookings</h3>
+    {% if past_bookings %}
+        <table class="table table-bordered table-striped">
+            <thead class="table-secondary">
+                <tr>
+                    <th>Movie</th>
+                    <th>Theater</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Seats</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in past_bookings %}
                 <tr>
                     <td>{{ booking.showtime.movie.title }}</td>
                     <td>{{ booking.showtime.theater.name }}</td>
@@ -41,16 +77,9 @@
                     <td>${{ booking.total_price }}</td>
                     <td>
                         {% if booking.status == 'confirmed' %}
-                            <span class="badge bg-success">Confirmed</span>
+                            <span class="badge bg-secondary">Completed</span>
                         {% else %}
                             <span class="badge bg-danger">Cancelled</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if booking.status == 'confirmed' %}
-                            <a href="{% url 'cancel_booking' booking.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Cancel this booking?')">Cancel</a>
-                        {% else %}
-                            <span class="text-muted">Cancelled</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -58,7 +87,7 @@
             </tbody>
         </table>
     {% else %}
-        <div class="alert alert-info">No bookings yet. <a href="{% url 'home' %}">Book a movie now!</a></div>
+        <p class="text-muted">No past bookings.</p>
     {% endif %}
 </div>
 </body>
