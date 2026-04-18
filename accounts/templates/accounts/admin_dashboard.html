@@ -1,17 +1,132 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="alert alert-info">
-            <h2>Admin Dashboard</h2>
-            <p>Welcome Admin {{ user.username }}!</p>
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-gradient-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-crown fa-2x"></i>
+                            <h3 class="d-inline-block ms-3 mb-0">Admin Dashboard</h3>
+                        </div>
+                        <div>
+                            <span class="badge bg-light text-dark">
+                                <i class="fas fa-user-shield"></i> {{ user.username }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body bg-gradient-dark">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Welcome back, <strong>{{ user.username }}</strong>! Manage your cinema operations from here.
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-3 mb-3">
+                            <div class="dashboard-card">
+                                <i class="fas fa-film fa-3x text-primary"></i>
+                                <h4 class="mt-2">Movies</h4>
+                                <p>{{ movie_count }} Movies</p>
+                                <a href="/admin/movies/movie/" class="btn btn-sm btn-primary">Manage</a>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="dashboard-card">
+                                <i class="fas fa-clock fa-3x text-success"></i>
+                                <h4 class="mt-2">Showtimes</h4>
+                                <p>{{ showtime_count }} Showtimes</p>
+                                <a href="/admin/movies/showtime/" class="btn btn-sm btn-success">Manage</a>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="dashboard-card">
+                                <i class="fas fa-chair fa-3x text-warning"></i>
+                                <h4 class="mt-2">Seats</h4>
+                                <p>50 per showtime</p>
+                                <a href="/admin/movies/seat/" class="btn btn-sm btn-warning">Manage</a>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="dashboard-card">
+                                <i class="fas fa-ticket-alt fa-3x text-info"></i>
+                                <h4 class="mt-2">Bookings</h4>
+                                <p>{{ booking_count }} Bookings</p>
+                                <a href="/admin/bookings/booking/" class="btn btn-sm btn-info">Manage</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-2">
+                        <div class="col-md-3 mb-3">
+                            <div class="dashboard-card">
+                                <i class="fas fa-users fa-3x text-secondary"></i>
+                                <h4 class="mt-2">Users</h4>
+                                <p>Manage accounts</p>
+                                <a href="/admin/accounts/customuser/" class="btn btn-sm btn-secondary">Manage</a>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="dashboard-card">
+                                <i class="fas fa-chart-line fa-3x text-danger"></i>
+                                <h4 class="mt-2">Reports</h4>
+                                <p>View analytics</p>
+                                <a href="/admin/" class="btn btn-sm btn-danger">View</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="dashboard-card bg-dark text-white">
+                                <i class="fas fa-database fa-3x"></i>
+                                <h4 class="mt-2">Database Statistics</h4>
+                                <p class="mb-0">Movies: {{ movie_count }} | Showtimes: {{ showtime_count }} | Bookings: {{ booking_count }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <a href="{% url 'logout' %}" class="btn btn-danger btn-lg px-5">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <a href="/admin/" class="btn btn-primary">Django Admin</a>
-        <a href="/accounts/logout/" class="btn btn-danger">Logout</a>
     </div>
-</body>
-</html>
+</div>
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+    
+    .bg-gradient-dark {
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        min-height: 500px;
+    }
+    
+    .dashboard-card {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s;
+        height: 100%;
+    }
+    
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.15);
+    }
+    
+    .dashboard-card h4 {
+        color: white;
+        font-size: 18px;
+    }
+    
+    .dashboard-card p {
+        color: rgba(255,255,255,0.7);
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
