@@ -7,11 +7,23 @@ from django.db import transaction
 from .models import Movie, ShowTime, Booking   
 from datetime import date
 
+# ========== HOME VIEW ==========
+
 def home(request):
+    """
+    Display all movies on the home page.
+    Retrieves all movies from database and passes to template.
+    """
     movies = Movie.objects.all()
     return render(request, 'booking/home.html', {'movies': movies})
 
+# ========== SHOWTIMES VIEW ==========
+
 def showtimes(request, movie_id):
+    """
+    Display all showtimes for a specific movie.
+    Args: movie_id - ID of the selected movie
+    """
     movie = get_object_or_404(Movie, id=movie_id)
     showtimes = ShowTime.objects.filter(movie=movie)
     return render(request, 'booking/showtimes.html', {
@@ -22,6 +34,11 @@ def showtimes(request, movie_id):
 # ========== REGISTER VIEW ==========
 
 def register(request):
+    """
+    Handle user registration.
+    Validates username, email, password and creates new user account.
+    Automatically logs in user after successful registration.
+    """
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -43,9 +60,13 @@ def register(request):
     
     return render(request, 'booking/register.html')
 
-# ========== LOGIN & LOGOUT VIEWS ==========
+# ========== LOGIN VIEW ==========
 
 def user_login(request):
+    """
+    Handle user login authentication.
+    Authenticates username and password, creates session for logged in user.
+    """
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -60,7 +81,13 @@ def user_login(request):
     
     return render(request, 'booking/login.html')
 
+# ========== LOGOUT VIEW ==========
+
 def user_logout(request):
+    """
+    Handle user logout.
+    Ends user session and redirects to home page.
+    """
     logout(request)
     messages.info(request, 'You have been logged out')
     return redirect('home')
@@ -69,9 +96,11 @@ def user_logout(request):
 
 @login_required
 def book_ticket(request, showtime_id):
-    from .models import ShowTime, Booking
-    from datetime import date
-    
+    """
+    Handle ticket booking for a specific showtime.
+    Validates: past dates, duplicate bookings, seat availability.
+    Uses atomic transaction to ensure data consistency.
+    """
     showtime = get_object_or_404(ShowTime, id=showtime_id)
     
     # Prevent past bookings
@@ -79,7 +108,7 @@ def book_ticket(request, showtime_id):
         messages.error(request, f'Cannot book tickets for past showtimes!')
         return redirect('showtimes', movie_id=showtime.movie.id)
     
-    # NEW: Prevent duplicate active bookings
+    # Prevent duplicate active bookings
     existing_booking = Booking.objects.filter(
         user=request.user, 
         showtime=showtime, 
@@ -124,8 +153,10 @@ def book_ticket(request, showtime_id):
 
 @login_required
 def my_bookings(request):
-    from datetime import date
-    
+    """
+    Display user's booking history.
+    Separates bookings into upcoming and past for better UI.
+    """
     all_bookings = Booking.objects.filter(user=request.user).select_related(
         'showtime', 'showtime__movie', 'showtime__theater'
     ).order_by('-booked_at')
@@ -149,6 +180,11 @@ def my_bookings(request):
 
 @login_required
 def cancel_booking(request, booking_id):
+    """
+    Cancel an existing booking.
+    Restores seats to showtime and updates booking status.
+    Uses atomic transaction to ensure data consistency.
+    """
     booking = get_object_or_404(Booking, id=booking_id, user=request.user)
     
     if booking.status == 'cancelled':
