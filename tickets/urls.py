@@ -1,30 +1,16 @@
 from django.urls import path
 from . import views
-from django.urls import path
-from . import views
 
 urlpatterns = [
-    path('', views.test_view, name='test'),
+    path('', views.home, name='home'),
+    path('movies/', views.movie_list, name='movie_list'),
+    path('movies/<int:movie_id>/', views.movie_detail, name='movie_detail'),
+    path('showtime/<int:showtime_id>/seats/', views.seat_selection, name='seat_selection'),
+    path('showtime/<int:showtime_id>/book/', views.confirm_booking, name='confirm_booking'),
+    path('bookings/', views.my_bookings, name='my_bookings'),
+    path('bookings/<int:booking_id>/', views.booking_detail, name='booking_detail'),
+    path('bookings/<int:booking_id>/cancel/', views.cancel_booking, name='cancel_booking'),
+    path('register/', views.register_view, name='register'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
 ]
-
-
-urlpatterns = [
-    path('download-ticket/<int:booking_id>/', views.download_ticket, name='download_ticket'),
-]
-
-urlpatterns = [
-path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),]
-=======
->>>>>>> fd52602f740ff45baf987a5aa7413a9691a9f44c
-
-urlpatterns = [
-    path('', views.test_view, name='test'),
-]
-
-
-urlpatterns = [
-    path('download-ticket/<int:booking_id>/', views.download_ticket, name='download_ticket'),
-]
-
-urlpatterns = [
-path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),]
