@@ -235,10 +235,10 @@
         }
         totalPriceDiv.innerHTML = `Rs. ${selected.length * pricePerSeat}`;
     }
-    
-    
     document.querySelectorAll('.seat-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', updateSummary);
     });
 </script>
 {% endblock %}
+{% endblock %}
+

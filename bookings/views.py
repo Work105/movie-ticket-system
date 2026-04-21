@@ -27,7 +27,7 @@ def select_seats(request, showtime_id):
             'booked_seat_numbers': booked_seat_numbers,
         }
         return render(request, 'bookings/select_seats.html', context)
-        
+
 @login_required
 def confirm_booking(request, showtime_id):
     if request.method == 'POST':
