@@ -48,30 +48,7 @@
          <button type="submit" class="btn btn-primary w-100 mt-2">
             <i class="bi bi-person-plus me-1"></i> Register
          </button>
-      </form>
-
-
-          <!-- Password strength bar (only shows on password1 field) -->
-          {% if field.html_name == 'password1' %}
-          <div class="mt-2" id="strength-wrapper" style="display:none;">
-            <div class="progress" style="height:5px; border-radius:4px;">
-              <div id="strength-bar" class="progress-bar" style="width:0%; transition: width 0.3s;"></div>
-            </div>
-            <small id="strength-text" class="mt-1 d-block"></small>
-          </div>
-          {% endif %}
-
-          {% if field.errors %}
-            <div class="text-danger small mt-1">{{ field.errors|join:", " }}</div>
-          {% endif %}
-        </div>
-        {% endfor %}
-
-        <button type="submit" class="btn btn-primary w-100 mt-2">
-          <i class="bi bi-person-plus me-1"></i> Register
-        </button>
-      </form>
-
+      </form>   
       <p class="text-center text-muted mt-3 small">
         Already have an account? <a href="{% url 'login' %}" style="color:#e94560;">Login</a>
       </p>
