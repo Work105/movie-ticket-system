@@ -4,15 +4,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
+from django.http import JsonResponse
 from .models import Movie, ShowTime, Booking   
 from datetime import date
+from .utils import validate_booking_request, calculate_total_price, generate_booking_reference
 
 # ========== HOME VIEW ==========
 
 def home(request):
     """
     Display all movies on the home page.
-    Retrieves all movies from database and passes to template.
     """
     movies = Movie.objects.all()
     return render(request, 'booking/home.html', {'movies': movies})
@@ -22,13 +23,13 @@ def home(request):
 def showtimes(request, movie_id):
     """
     Display all showtimes for a specific movie.
-    Args: movie_id - ID of the selected movie
     """
     movie = get_object_or_404(Movie, id=movie_id)
     showtimes = ShowTime.objects.filter(movie=movie)
     return render(request, 'booking/showtimes.html', {
         'movie': movie,
-        'showtimes': showtimes
+        'showtimes': showtimes,
+        'today': date.today()
     })
 
 # ========== REGISTER VIEW ==========
@@ -36,8 +37,6 @@ def showtimes(request, movie_id):
 def register(request):
     """
     Handle user registration.
-    Validates username, email, password and creates new user account.
-    Automatically logs in user after successful registration.
     """
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -46,24 +45,24 @@ def register(request):
         confirm_password = request.POST.get('confirm_password')
         
         if password != confirm_password:
-            messages.error(request, '❌ Passwords do not match. Please re-enter your password.')
+            messages.error(request, '❌ Passwords do not match.')
             return redirect('register')
         
         if User.objects.filter(username=username).exists():
-            messages.error(request, f'❌ Username "{username}" is already taken. Please choose a different username.')
+            messages.error(request, f'❌ Username "{username}" is already taken.')
             return redirect('register')
         
         if User.objects.filter(email=email).exists():
-            messages.error(request, f'❌ Email "{email}" is already registered. Please use a different email or login.')
+            messages.error(request, f'❌ Email "{email}" is already registered.')
             return redirect('register')
         
         if len(password) < 6:
-            messages.error(request, '❌ Password must be at least 6 characters long for security.')
+            messages.error(request, '❌ Password must be at least 6 characters.')
             return redirect('register')
         
         user = User.objects.create_user(username=username, email=email, password=password)
         login(request, user)
-        messages.success(request, f'✅ Welcome {username}! Your account has been created successfully.')
+        messages.success(request, f'✅ Welcome {username}!')
         return redirect('home')
     
     return render(request, 'booking/register.html')
@@ -73,7 +72,6 @@ def register(request):
 def user_login(request):
     """
     Handle user login authentication.
-    Authenticates username and password, creates session for logged in user.
     """
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -87,10 +85,10 @@ def user_login(request):
         
         if user is not None:
             login(request, user)
-            messages.success(request, f'✅ Welcome back {username}! You are now logged in.')
+            messages.success(request, f'✅ Welcome back {username}!')
             return redirect('home')
         else:
-            messages.error(request, '❌ Invalid username or password. Please try again or register a new account.')
+            messages.error(request, '❌ Invalid username or password.')
     
     return render(request, 'booking/login.html')
 
@@ -99,10 +97,9 @@ def user_login(request):
 def user_logout(request):
     """
     Handle user logout.
-    Ends user session and redirects to home page.
     """
     logout(request)
-    messages.info(request, '✅ You have been successfully logged out. Come back soon!')
+    messages.info(request, '✅ You have been successfully logged out.')
     return redirect('home')
 
 # ========== BOOK TICKET VIEW ==========
@@ -111,14 +108,12 @@ def user_logout(request):
 def book_ticket(request, showtime_id):
     """
     Handle ticket booking for a specific showtime.
-    Validates: past dates, duplicate bookings, seat availability.
-    Uses atomic transaction to ensure data consistency.
     """
     showtime = get_object_or_404(ShowTime, id=showtime_id)
     
     # Prevent past bookings
     if showtime.date < date.today():
-        messages.error(request, f'❌ Cannot book tickets for past showtimes! This show was on {showtime.date}. Please select a future show.')
+        messages.error(request, f'❌ Cannot book tickets for past showtimes!')
         return redirect('showtimes', movie_id=showtime.movie.id)
     
     # Prevent duplicate active bookings
@@ -129,7 +124,7 @@ def book_ticket(request, showtime_id):
     ).exists()
     
     if existing_booking:
-        messages.error(request, f'❌ You already have a confirmed booking for {showtime.movie.title} on {showtime.date}. You cannot book the same show twice.')
+        messages.error(request, f'❌ You already have a confirmed booking for this show.')
         return redirect('showtimes', movie_id=showtime.movie.id)
     
     if request.method == 'POST':
@@ -137,15 +132,15 @@ def book_ticket(request, showtime_id):
             seats = int(request.POST.get('seats', 0))
             
             if seats <= 0:
-                messages.error(request, '❌ Please select at least 1 seat to book.')
+                messages.error(request, '❌ Please select at least 1 seat.')
                 return redirect('book_ticket', showtime_id=showtime_id)
             
             if seats > 10:
-                messages.error(request, '❌ Maximum 10 seats allowed per booking. Please reduce the number of seats.')
+                messages.error(request, '❌ Maximum 10 seats allowed per booking.')
                 return redirect('book_ticket', showtime_id=showtime_id)
             
             if not showtime.can_book(seats):
-                messages.error(request, f'❌ Only {showtime.seats_available} seats available for this showtime. Please select fewer seats.')
+                messages.error(request, f'❌ Only {showtime.seats_available} seats available.')
                 return redirect('book_ticket', showtime_id=showtime_id)
             
             with transaction.atomic():
@@ -158,11 +153,11 @@ def book_ticket(request, showtime_id):
                 showtime.seats_available -= seats
                 showtime.save()
             
-            messages.success(request, f'✅ Successfully booked {seats} ticket(s) for {showtime.movie.title}! Total: ${booking.total_price}. Enjoy the show!')
+            messages.success(request, f'✅ Successfully booked {seats} ticket(s)! Reference: {booking.booking_reference}')
             return redirect('my_bookings')
             
         except ValueError:
-            messages.error(request, '❌ Invalid number of seats. Please enter a valid number.')
+            messages.error(request, '❌ Invalid number of seats.')
             return redirect('book_ticket', showtime_id=showtime_id)
     
     return render(request, 'booking/book_ticket.html', {'showtime': showtime})
@@ -173,13 +168,11 @@ def book_ticket(request, showtime_id):
 def my_bookings(request):
     """
     Display user's booking history.
-    Separates bookings into upcoming and past for better UI.
     """
     all_bookings = Booking.objects.filter(user=request.user).select_related(
         'showtime', 'showtime__movie', 'showtime__theater'
     ).order_by('-booked_at')
     
-    # Separate upcoming and past bookings
     upcoming_bookings = []
     past_bookings = []
     
@@ -190,7 +183,7 @@ def my_bookings(request):
             past_bookings.append(booking)
     
     if not all_bookings:
-        messages.info(request, '📅 You have no bookings yet. Book a movie ticket to get started!')
+        messages.info(request, '📅 You have no bookings yet.')
     
     return render(request, 'booking/my_bookings.html', {
         'upcoming_bookings': upcoming_bookings,
@@ -203,18 +196,15 @@ def my_bookings(request):
 def cancel_booking(request, booking_id):
     """
     Cancel an existing booking.
-    Restores seats to showtime and updates booking status.
-    Uses atomic transaction to ensure data consistency.
     """
     booking = get_object_or_404(Booking, id=booking_id, user=request.user)
     
     if booking.status == 'cancelled':
-        messages.warning(request, f'⚠️ This booking for {booking.showtime.movie.title} was already cancelled previously.')
+        messages.warning(request, '⚠️ This booking was already cancelled.')
         return redirect('my_bookings')
     
-    # Check if showtime hasn't passed
     if booking.showtime.date < date.today():
-        messages.error(request, f'❌ Cannot cancel past bookings for {booking.showtime.movie.title} because the show has already happened.')
+        messages.error(request, '❌ Cannot cancel past bookings.')
         return redirect('my_bookings')
     
     with transaction.atomic():
@@ -223,5 +213,40 @@ def cancel_booking(request, booking_id):
         booking.status = 'cancelled'
         booking.save()
     
-    messages.success(request, f'✅ Booking for {booking.showtime.movie.title} cancelled successfully. {booking.seats} seat(s) have been restored.')
+    messages.success(request, f'✅ Booking {booking.booking_reference} cancelled successfully.')
     return redirect('my_bookings')
+
+# ========== NEW VIEWS FROM FRIEND'S SYSTEM ==========
+
+@login_required
+def check_availability(request, showtime_id):
+    """AJAX endpoint to check seat availability"""
+    showtime = get_object_or_404(ShowTime, id=showtime_id)
+    requested_seats = int(request.GET.get('seats', 0))
+    
+    is_available = showtime.can_book(requested_seats)
+    
+    return JsonResponse({
+        'available': is_available,
+        'seats_left': showtime.seats_available,
+        'max_bookable': min(10, showtime.seats_available)
+    })
+
+@login_required
+def booking_details(request, booking_id):
+    """View detailed booking information (for ticket printing)"""
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    
+    return render(request, 'booking/booking_details.html', {
+        'booking': booking,
+        'qr_data': f"BOOKING:{booking.booking_reference}:{booking.showtime.id}:{booking.seats}"
+    })
+
+@login_required
+def my_tickets(request):
+    """View all tickets (alternative view)"""
+    bookings = Booking.objects.filter(user=request.user).select_related(
+        'showtime', 'showtime__movie', 'showtime__theater'
+    ).order_by('-booked_at')
+    
+    return render(request, 'booking/my_tickets.html', {'bookings': bookings})
