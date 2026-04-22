@@ -1,0 +1,1 @@
+[{"model": "tickets.theatre", "pk": 1, "fields": {"name": "Regal Cinemas", "location": "Downtown City Center", "total_seats": 100}}]

@@ -1,0 +1,1 @@
+[{"model": "tickets.movie", "pk": 1, "fields": {"title": "Inception", "description": "A thief who steals secrets through dream-sharing technology", "genre": "sci_fi", "duration_minutes": 148, "poster": "posters/i_HTG6qdt.webp", "release_date": "2026-04-22", "is_active": true}}]
