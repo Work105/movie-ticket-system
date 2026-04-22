@@ -66,10 +66,8 @@
             <i class="bi bi-ticket-perforated"></i> My Bookings</a></li>
           <li class="nav-item"><span class="nav-link text-warning">Hi, {{ user.first_name }}!</span></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-        {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-          <li class="nav-item"><a class="btn btn-primary ms-2" href="{% url 'register' %}">Register</a></li>
         {% endif %}
+      </ul>
       </ul>
     </div>
   </div>
