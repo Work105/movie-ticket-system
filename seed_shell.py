@@ -37,3 +37,20 @@ print("👉 Go to   → http://127.0.0.1:8000/admin/")
 print("👉 Username: admin123")
 print("👉 Password: admin123")
 print("─────────────────────────────────────")
+
+from tickets.models import Showtime, Seat
+
+# Auto create seats for all showtimes
+for showtime in Showtime.objects.all():
+    # Create seats A1-A10, B1-B10 ... J1-J10
+    for row in 'ABCDEFGHIJ':
+        for number in range(1, 11):
+            Seat.objects.get_or_create(
+                showtime=showtime,
+                row=row,
+                number=number,
+                defaults={'is_booked': False}
+            )
+    print(f"✅ Seats created for: {showtime}")
+
+print("🎉 All seats created!")
