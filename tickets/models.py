@@ -25,7 +25,7 @@ class Movie(models.Model):
     description = models.TextField()
     genre = models.CharField(max_length=100, choices=GENRE_CHOICES)
     duration_minutes = models.IntegerField()
-    poster = models.ImageField(upload_to='posters/', blank=True, null=True)
+    poster_url = models.URLField(blank=True, null=True)
     release_date = models.DateField()
     is_active = models.BooleanField(default=True)
 
