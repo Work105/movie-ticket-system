@@ -31,7 +31,7 @@
       min-height: 100vh;
     }
 
-    /* NAVBAR */
+    /* ── NAVBAR ── */
     .navbar {
       background: rgba(12,12,25,0.97) !important;
       backdrop-filter: blur(20px);
@@ -51,7 +51,14 @@
       gap: 8px;
     }
     .navbar-brand i { color: var(--red); font-size: 1.5rem; }
-    .nav-link { color: #dde3f0 !important; font-weight: 500; font-size: 0.9rem; padding: 6px 14px !important; border-radius: 6px; transition: all 0.2s; }
+    .nav-link {
+      color: #dde3f0 !important;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 6px 14px !important;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
     .nav-link:hover { color: var(--gold) !important; background: rgba(245,197,24,0.1); }
     .nav-username { color: var(--gold) !important; font-weight: 600; font-size: 0.9rem; }
     .btn-logout {
@@ -65,7 +72,7 @@
     }
     .btn-logout:hover { background: var(--red); color: #fff !important; border-color: var(--red); }
 
-    /* MOVIE CARDS */
+    /* ── MOVIE CARDS ── */
     .movie-card {
       background: var(--card-bg);
       border: 1px solid rgba(255,255,255,0.08);
@@ -80,7 +87,7 @@
     }
     .movie-card img { width: 100%; height: 280px; object-fit: cover; display: block; }
 
-    /* BADGES */
+    /* ── BADGES ── */
     .badge-genre {
       background: linear-gradient(135deg, var(--red), #c1121f);
       color: #fff;
@@ -92,7 +99,7 @@
       border-radius: 20px;
     }
 
-    /* BUTTONS */
+    /* ── BUTTONS ── */
     .btn-primary {
       background: linear-gradient(135deg, var(--red), #c1121f) !important;
       border: none !important;
@@ -105,6 +112,7 @@
       background: linear-gradient(135deg, #ff4d5e, var(--red)) !important;
       transform: translateY(-1px);
       box-shadow: 0 6px 20px rgba(230,57,70,0.4);
+      color: #fff !important;
     }
     .btn-outline-secondary {
       border-color: rgba(255,255,255,0.2) !important;
@@ -117,7 +125,7 @@
       border-color: rgba(255,255,255,0.35) !important;
     }
 
-    /* BOOKING CARD */
+    /* ── BOOKING CARD ── */
     .booking-card {
       background: var(--card-bg);
       border: 1px solid rgba(255,255,255,0.08);
@@ -126,7 +134,7 @@
     }
     .booking-card:hover { border-color: rgba(245,197,24,0.3); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
 
-    /* SEATS */
+    /* ── SEATS ── */
     .seat {
       width: 36px; height: 36px;
       display: inline-flex; align-items: center; justify-content: center;
@@ -143,7 +151,7 @@
     .seat:not(.booked):hover { background: rgba(34,197,94,0.3); border-color: #22c55e; color: #fff; }
     .screen { background: linear-gradient(to right, transparent, var(--gold), transparent); height: 3px; border-radius: 4px; margin-bottom: 24px; opacity: 0.5; }
 
-    /* FORMS */
+    /* ── FORMS ── */
     .form-control, .form-select {
       background: rgba(255,255,255,0.07) !important;
       border: 1px solid rgba(255,255,255,0.15) !important;
@@ -157,7 +165,7 @@
     .form-label { color: #c8d4e8 !important; font-weight: 500; font-size: 0.9rem; }
     ::placeholder { color: #5a6a80 !important; }
 
-    /* MISC */
+    /* ── MISC ── */
     .input-icon { position: relative; }
     .input-icon i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #667799; }
     .input-icon input { padding-left: 36px; }
@@ -171,19 +179,19 @@
     .block { display: flex; flex-direction: column; gap: 10px; }
     .row { display: flex; justify-content: center; }
 
-    /* TEXT */
+    /* ── TEXT ── */
     .text-muted { color: #8fa0c0 !important; }
     h1, h2, h3, h4, h5, h6 { color: #f0f4ff; }
     p { color: #c8d4e8; }
 
-    /* FOOTER */
+    /* ── FOOTER ── */
     footer { background: rgba(8,8,18,0.9); border-top: 1px solid rgba(245,197,24,0.15); margin-top: 80px; }
     footer p { color: #667799; font-size: 0.85rem; }
 
-    /* ALERTS */
+    /* ── ALERTS ── */
     .alert { background: rgba(245,197,24,0.12); border: 1px solid rgba(245,197,24,0.25); color: #f5e090; border-radius: 10px; }
 
-    /* SCROLLBAR */
+    /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--dark); }
     ::-webkit-scrollbar-thumb { background: rgba(245,197,24,0.3); border-radius: 3px; }
@@ -204,6 +212,7 @@
         <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house me-1"></i>Home</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'movie_list' %}"><i class="bi bi-film me-1"></i>Movies</a></li>
       </ul>
+
       <ul class="navbar-nav ms-auto align-items-center gap-2">
         {% if user.is_authenticated %}
           <li class="nav-item">
@@ -219,8 +228,26 @@
               <i class="bi bi-box-arrow-right me-1"></i>Logout
             </a>
           </li>
+        {% else %}
+          <li class="nav-item">
+            <a href="{% url 'login' %}"
+               style="display:inline-block; padding:7px 20px; border-radius:20px; border:1px solid rgba(255,255,255,0.25); color:#dde3f0; font-size:0.88rem; font-weight:500; text-decoration:none; transition:all 0.2s;"
+               onmouseover="this.style.borderColor='rgba(245,197,24,0.5)'; this.style.color='#f5c518'; this.style.background='rgba(245,197,24,0.08)';"
+               onmouseout="this.style.borderColor='rgba(255,255,255,0.25)'; this.style.color='#dde3f0'; this.style.background='transparent';">
+              <i class="bi bi-box-arrow-in-right me-1"></i>Login
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'register' %}"
+               style="display:inline-block; padding:7px 20px; border-radius:20px; background:linear-gradient(135deg,#e63946,#c1121f); color:#fff; font-size:0.88rem; font-weight:700; text-decoration:none; transition:all 0.2s; letter-spacing:0.3px;"
+               onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(230,57,70,0.45)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+              <i class="bi bi-person-plus-fill me-1"></i>Register
+            </a>
+          </li>
         {% endif %}
       </ul>
+
     </div>
   </div>
 </nav>
@@ -237,7 +264,10 @@
 
 <footer class="py-4">
   <div class="container text-center">
-    <p class="mb-0"><i class="bi bi-camera-reels-fill me-2" style="color:#e63946;"></i>&copy; 2025 EliteCineBook — Premium Online Movie Ticket Booking</p>
+    <p class="mb-0">
+      <i class="bi bi-camera-reels-fill me-2" style="color:#e63946;"></i>
+      &copy; 2025 EliteCineBook — Premium Online Movie Ticket Booking
+    </p>
   </div>
 </footer>
 
@@ -245,4 +275,6 @@
 {% block scripts %}{% endblock %}
 </body>
 </html>
+
+
 

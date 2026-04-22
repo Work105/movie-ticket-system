@@ -2,50 +2,92 @@
 {% block title %}EliteCineBook — Now Showing{% endblock %}
 {% block content %}
 
-<!-- HERO SECTION -->
-<div class="text-center py-5 mb-5 position-relative" style="background: linear-gradient(135deg, #0f0f1a, #1a1a2e, #16213e); border-radius: 20px; overflow:hidden; border:1px solid rgba(245,197,24,0.15);">
-  <!-- Background glow effects -->
-  <div style="position:absolute; top:-50px; left:50%; transform:translateX(-50%); width:600px; height:200px; background:radial-gradient(ellipse, rgba(230,57,70,0.15), transparent); pointer-events:none;"></div>
+<!-- ── HERO SECTION ── -->
+<div class="text-center py-5 mb-5 position-relative"
+     style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e,#16213e); border-radius:20px; overflow:hidden; border:1px solid rgba(245,197,24,0.15); min-height:280px; display:flex; align-items:center; justify-content:center;">
 
-  <div class="position-relative" style="z-index:1;">
+  <!-- Background glow -->
+  <div style="position:absolute; top:-60px; left:50%; transform:translateX(-50%); width:700px; height:250px; background:radial-gradient(ellipse, rgba(230,57,70,0.15), transparent); pointer-events:none;"></div>
+  <div style="position:absolute; bottom:-40px; right:10%; width:400px; height:200px; background:radial-gradient(ellipse, rgba(245,197,24,0.07), transparent); pointer-events:none;"></div>
+
+  <div class="position-relative px-4" style="z-index:1;">
     <p style="color:#e63946; font-size:0.75rem; letter-spacing:4px; font-weight:700; text-transform:uppercase; margin-bottom:10px;">
       Welcome to EliteCineBook
     </p>
-    <h1 style="font-family:'Bebas Neue',sans-serif; font-size:4.5rem; letter-spacing:3px; color:#f0f4ff; line-height:1; margin-bottom:12px;">
+    <h1 style="font-family:'Bebas Neue',sans-serif; font-size:4.5rem; letter-spacing:3px; color:#f0f4ff; line-height:1; margin-bottom:14px;">
       NOW <span style="color:#f5c518;">SHOWING</span>
     </h1>
-    <p style="color:#8fa0c0; font-size:1.05rem; max-width:480px; margin:0 auto 28px;">
+    <p style="color:#8fa0c0; font-size:1.05rem; max-width:480px; margin:0 auto 30px; line-height:1.6;">
       Book your favourite movies online in seconds — fast, easy, and reliable.
     </p>
-    <a href="{% url 'movie_list' %}" class="btn btn-primary btn-lg px-5"
-       style="border-radius:30px; font-weight:700; letter-spacing:1px; padding:14px 40px; font-size:1rem;">
-      <i class="bi bi-play-circle-fill me-2"></i>Browse All Movies
-    </a>
+
+    <!-- Buttons Row -->
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+
+      <!-- Browse Movies -->
+      <a href="{% url 'movie_list' %}"
+         style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,#e63946,#c1121f); color:#fff; padding:13px 36px; border-radius:30px; font-weight:700; font-size:0.95rem; text-decoration:none; letter-spacing:0.5px; transition:all 0.2s;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 30px rgba(230,57,70,0.45)';"
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <i class="bi bi-play-circle-fill"></i> Browse All Movies
+      </a>
+
+      <!-- Register (only if not logged in) -->
+      {% if not user.is_authenticated %}
+      <a href="{% url 'register' %}"
+         style="display:inline-flex; align-items:center; gap:8px; background:transparent; color:#f5c518; padding:13px 36px; border-radius:30px; font-weight:700; font-size:0.95rem; text-decoration:none; border:2px solid rgba(245,197,24,0.45); letter-spacing:0.5px; transition:all 0.2s;"
+         onmouseover="this.style.background='rgba(245,197,24,0.1)'; this.style.borderColor='#f5c518'; this.style.transform='translateY(-2px)';"
+         onmouseout="this.style.background='transparent'; this.style.borderColor='rgba(245,197,24,0.45)'; this.style.transform='translateY(0)';">
+        <i class="bi bi-person-plus-fill"></i> Register Free
+      </a>
+      {% endif %}
+
+    </div>
+
+    <!-- Login link below buttons (only if not logged in) -->
+    {% if not user.is_authenticated %}
+    <p style="margin-top:18px; color:#667799; font-size:0.85rem;">
+      Already have an account?
+      <a href="{% url 'login' %}"
+         style="color:#f5c518; font-weight:600; text-decoration:none;"
+         onmouseover="this.style.textDecoration='underline';"
+         onmouseout="this.style.textDecoration='none';">
+        Sign in here
+      </a>
+    </p>
+    {% else %}
+    <p style="margin-top:18px; color:#667799; font-size:0.85rem;">
+      <i class="bi bi-check-circle-fill me-1" style="color:#22c55e;"></i>
+      Welcome back, <span style="color:#f5c518; font-weight:600;">{{ user.first_name }}</span>! Ready to book?
+    </p>
+    {% endif %}
+
   </div>
 </div>
 
-<!-- FEATURED MOVIES HEADER -->
-<div class="d-flex align-items-center justify-content-between mb-4">
+<!-- ── FEATURED MOVIES HEADER ── -->
+<div class="d-flex align-items-center justify-content-between mb-3">
   <div>
     <p style="color:#e63946; font-size:0.72rem; letter-spacing:3px; font-weight:700; text-transform:uppercase; margin-bottom:4px;">Hand Picked</p>
     <h2 style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem; letter-spacing:2px; color:#f0f4ff; margin:0;">Featured Movies</h2>
   </div>
-  <a href="{% url 'movie_list' %}" style="color:#f5c518; font-size:0.85rem; font-weight:600; text-decoration:none; border:1px solid rgba(245,197,24,0.3); padding:7px 18px; border-radius:20px; transition:all 0.2s;"
-     onmouseover="this.style.background='rgba(245,197,24,0.1)'"
-     onmouseout="this.style.background='transparent'">
+  <a href="{% url 'movie_list' %}"
+     style="color:#f5c518; font-size:0.85rem; font-weight:600; text-decoration:none; border:1px solid rgba(245,197,24,0.3); padding:7px 18px; border-radius:20px; transition:all 0.2s;"
+     onmouseover="this.style.background='rgba(245,197,24,0.1)'; this.style.borderColor='#f5c518';"
+     onmouseout="this.style.background='transparent'; this.style.borderColor='rgba(245,197,24,0.3)';">
     View All <i class="bi bi-arrow-right ms-1"></i>
   </a>
 </div>
 
-<!-- DIVIDER -->
-<div style="height:1px; background:linear-gradient(to right, rgba(245,197,24,0.3), transparent); margin-bottom:32px;"></div>
+<!-- Divider -->
+<div style="height:1px; background:linear-gradient(to right,rgba(245,197,24,0.3),transparent); margin-bottom:32px;"></div>
 
-<!-- MOVIES GRID -->
+<!-- ── MOVIES GRID ── -->
 <div class="row g-4">
   {% for movie in movies %}
   <div class="col-md-4">
     <div class="card h-100 position-relative"
-         style="background:#1e2a45; border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; cursor:pointer;"
+         style="background:#1e2a45; border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;"
          onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 24px 60px rgba(0,0,0,0.6)'; this.style.borderColor='rgba(245,197,24,0.3)';"
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(255,255,255,0.08)';">
 
@@ -62,9 +104,8 @@
             <i class="bi bi-film" style="font-size:4rem; color:#e63946; opacity:0.4;"></i>
           </div>
         {% endif %}
-
-        <!-- Gradient overlay at bottom of poster -->
-        <div style="position:absolute; bottom:0; left:0; right:0; height:80px; background:linear-gradient(to top, #1e2a45, transparent);"></div>
+        <!-- Bottom gradient on poster -->
+        <div style="position:absolute; bottom:0; left:0; right:0; height:80px; background:linear-gradient(to top,#1e2a45,transparent);"></div>
       </div>
 
       <!-- Genre Badge -->
