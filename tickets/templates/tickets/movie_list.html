@@ -27,13 +27,16 @@
   {% for movie in movies %}
   <div class="col-md-3 movie-item" data-title="{{ movie.title|lower }}">
     <div class="card movie-card h-100">
-      {% if movie.poster %}
-        <img src="{{ movie.poster.url }}" class="card-img-top" alt="{{ movie.title }}">
+
+      {% if movie.poster_url %}
+        <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}"
+             style="height:260px; object-fit:cover; border-radius:12px 12px 0 0;">
       {% else %}
         <div style="height:260px; background:#0f3460; display:flex; align-items:center; justify-content:center; border-radius:12px 12px 0 0;">
           <i class="bi bi-film" style="font-size:3rem; color:#e94560;"></i>
         </div>
       {% endif %}
+
       <div class="card-body">
         <span class="badge badge-genre mb-1">{{ movie.get_genre_display }}</span>
         <h6 class="card-title mt-1">{{ movie.title }}</h6>
