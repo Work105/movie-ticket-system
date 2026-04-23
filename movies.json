@@ -128,5 +128,31 @@
     "release_date": "2019-11-22",
     "is_active": true
   }
+},
+{
+  "model": "tickets.movie",
+  "pk": 11,
+  "fields": {
+    "title": "Sarigama",
+    "description": "A beautiful Sri Lankan love story about music, passion, and sacrifice.",
+    "genre": "romance",
+    "duration_minutes": 135,
+    "poster_url": "https://via.placeholder.com/300x450/1e2a45/ffffff?text=Sarigama",
+    "release_date": "2024-08-04",
+    "is_active": true
+  }
+},
+{
+  "model": "tickets.movie",
+  "pk": 12,
+  "fields": {
+    "title": "Neera",
+    "description": "A captivating Sri Lankan drama about a young woman's journey of self-discovery and resilience.",
+    "genre": "drama",
+    "duration_minutes": 125,
+    "poster_url": "https://via.placeholder.com/300x450/1e2a45/ffffff?text=Neera",
+    "release_date": "2026-06-10",
+    "is_active": true
+  }
 }
 ]
