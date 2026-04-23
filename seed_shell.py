@@ -1,56 +1,150 @@
 from django.contrib.auth import get_user_model
-from tickets.models import Movie
-from datetime import date
+from tickets.models import Movie, Theatre, Showtime, Seat
+from datetime import date, time
 
 User = get_user_model()
 
-# Create superuser
+# ============================================
+# 1. CREATE SUPERUSER
+# ============================================
 if not User.objects.filter(username='admin123').exists():
     User.objects.create_superuser('admin123', 'admin@cinema.com', 'admin123')
     print("✅ Superuser created → admin123 / admin123")
 else:
     print("ℹ️ Superuser already exists")
 
-# Add movies
+# ============================================
+# 2. CREATE THEATRES
+# ============================================
+theatres_data = [
+    {"name": "Scope Cinemas", "location": "Kandy, Sri Lanka", "total_seats": 120},
+    {"name": "Liberty Cinema", "location": "Negombo, Sri Lanka", "total_seats": 80},
+    {"name": "Savoy Cinema", "location": "Colombo, Sri Lanka", "total_seats": 100},
+]
+
+for t in theatres_data:
+    theatre, created = Theatre.objects.get_or_create(
+        name=t["name"],
+        defaults={"location": t["location"], "total_seats": t["total_seats"]}
+    )
+    if created:
+        print(f"✅ Theatre added: {t['name']}")
+    else:
+        print(f"ℹ️ Theatre already exists: {t['name']}")
+
+# ============================================
+# 3. CREATE MOVIES
+# ============================================
 movies_data = [
     {"title": "Avengers: Endgame", "description": "The Avengers assemble to reverse Thanos damage.", "duration_minutes": 181, "genre": "action", "release_date": date(2019, 4, 26), "poster_url": "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg", "is_active": True},
-    {"title": "Inception", "description": "A thief who steals secrets through dream-sharing technology.", "duration_minutes": 148, "genre": "sci_fi", "release_date": date(2010, 7, 16), "poster_url": "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg", "is_active": True},
+    {"title": "Inception", "description": "A thief who steals secrets through dream-sharing technology.", "duration_minutes": 148, "genre": "sci_fi", "release_date": date(2010, 7, 16), "poster_url": "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uc4.jpg", "is_active": True},
     {"title": "The Dark Knight", "description": "Batman faces the Joker who wants to plunge Gotham into anarchy.", "duration_minutes": 152, "genre": "action", "release_date": date(2008, 7, 18), "poster_url": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", "is_active": True},
-    {"title": "Interstellar", "description": "Explorers travel through a wormhole to ensure humanity survival.", "duration_minutes": 169, "genre": "sci_fi", "release_date": date(2014, 11, 7), "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", "is_active": True},
+    {"title": "Interstellar", "description": "Explorators travel through a wormhole to ensure humanity survival.", "duration_minutes": 169, "genre": "sci_fi", "release_date": date(2014, 11, 7), "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", "is_active": True},
     {"title": "Spider-Man: No Way Home", "description": "Spider-Man seeks help from Doctor Strange unleashing multiverse chaos.", "duration_minutes": 148, "genre": "action", "release_date": date(2021, 12, 17), "poster_url": "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg", "is_active": True},
     {"title": "Joker", "description": "A failed comedian turns to a life of crime in Gotham City.", "duration_minutes": 122, "genre": "drama", "release_date": date(2019, 10, 4), "poster_url": "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg", "is_active": True},
     {"title": "The Lion King", "description": "A young lion prince learns the true meaning of responsibility.", "duration_minutes": 118, "genre": "drama", "release_date": date(2019, 7, 19), "poster_url": "https://image.tmdb.org/t/p/w500/2bXbqYdUdNVa8VIWXVfclP2ICtT.jpg", "is_active": True},
-    {"title": "Doctor Strange", "description": "A surgeon discovers the hidden world of magic and alternate dimensions.", "duration_minutes": 115, "genre": "action", "release_date": date(2016, 11, 4), "poster_url": "https://m.media-amazon.com/images/M/MV5BNjgwNzAzNjk1Nl5BMl5BanBnXkFtZTgwMzQ2NjI1OTE@._V1_SX300.jpg","is_active": True},
+    {"title": "Doctor Strange", "description": "A surgeon discovers the hidden world of magic and alternate dimensions.", "duration_minutes": 115, "genre": "action", "release_date": date(2016, 11, 4), "poster_url": "https://image.tmdb.org/t/p/w500/xfWac8QYDf0tRkPcTtgjaeH3A8p.jpg", "is_active": True},
     {"title": "The Conjuring", "description": "Paranormal investigators help a family terrorized by a dark presence.", "duration_minutes": 112, "genre": "horror", "release_date": date(2013, 7, 19), "poster_url": "https://image.tmdb.org/t/p/w500/wVYREutTvI2tmxr6ujrHT704wGF.jpg", "is_active": True},
 ]
 
 for m in movies_data:
-    if not Movie.objects.filter(title=m["title"]).exists():
-        Movie.objects.create(**m)
-        print(f"✅ Added: {m['title']}")
+    movie, created = Movie.objects.get_or_create(
+        title=m["title"],
+        defaults={
+            "description": m["description"],
+            "duration_minutes": m["duration_minutes"],
+            "genre": m["genre"],
+            "release_date": m["release_date"],
+            "poster_url": m["poster_url"],
+            "is_active": m["is_active"]
+        }
+    )
+    if created:
+        print(f"✅ Movie added: {m['title']}")
     else:
-        print(f"ℹ️ Already exists: {m['title']}")
+        print(f"ℹ️ Movie already exists: {m['title']}")
 
-print("\n🎉 Done!")
-print("─────────────────────────────────────")
-print("👉 Go to   → http://127.0.0.1:8000/admin/")
+# ============================================
+# 4. CREATE SHOWTIMES
+# ============================================
+# Get all movies and theatres
+movies_dict = {m.title: m for m in Movie.objects.all()}
+theatres_dict = {t.name: t for t in Theatre.objects.all()}
+
+showtimes_data = [
+    # Scope Cinemas (Kandy)
+    {"movie": "The Conjuring", "theatre": "Scope Cinemas", "show_date": date(2026, 4, 24), "show_time": time(19, 0), "price": 1500.00, "available_seats": 100},
+    {"movie": "Inception", "theatre": "Scope Cinemas", "show_date": date(2026, 5, 1), "show_time": time(10, 0), "price": 1500.00, "available_seats": 98},
+    {"movie": "Spider-Man: No Way Home", "theatre": "Scope Cinemas", "show_date": date(2026, 5, 1), "show_time": time(10, 0), "price": 1500.00, "available_seats": 100},
+    {"movie": "Interstellar", "theatre": "Scope Cinemas", "show_date": date(2026, 5, 10), "show_time": time(19, 0), "price": 1500.00, "available_seats": 100},
+    
+    # Liberty Cinema (Negombo)
+    {"movie": "Avengers: Endgame", "theatre": "Liberty Cinema", "show_date": date(2026, 4, 28), "show_time": time(15, 0), "price": 1000.00, "available_seats": 100},
+    {"movie": "Doctor Strange", "theatre": "Liberty Cinema", "show_date": date(2026, 4, 30), "show_time": time(19, 0), "price": 1000.00, "available_seats": 100},
+    {"movie": "The Lion King", "theatre": "Liberty Cinema", "show_date": date(2026, 5, 3), "show_time": time(10, 0), "price": 1000.00, "available_seats": 100},
+    {"movie": "Inception", "theatre": "Liberty Cinema", "show_date": date(2026, 5, 1), "show_time": time(19, 0), "price": 1000.00, "available_seats": 100},
+    
+    # Savoy Cinema (Colombo)
+    {"movie": "The Dark Knight", "theatre": "Savoy Cinema", "show_date": date(2026, 4, 29), "show_time": time(10, 0), "price": 1500.00, "available_seats": 100},
+    {"movie": "Joker", "theatre": "Savoy Cinema", "show_date": date(2026, 4, 30), "show_time": time(16, 0), "price": 1500.00, "available_seats": 100},
+]
+
+for s in showtimes_data:
+    movie = movies_dict.get(s["movie"])
+    theatre = theatres_dict.get(s["theatre"])
+    
+    if movie and theatre:
+        showtime, created = Showtime.objects.get_or_create(
+            movie=movie,
+            theatre=theatre,
+            show_date=s["show_date"],
+            show_time=s["show_time"],
+            defaults={
+                "price": s["price"],
+                "available_seats": s["available_seats"]
+            }
+        )
+        if created:
+            print(f"✅ Showtime added: {s['movie']} at {s['theatre']} on {s['show_date']} {s['show_time']}")
+        else:
+            print(f"ℹ️ Showtime already exists: {s['movie']} at {s['theatre']}")
+    else:
+        if not movie:
+            print(f"❌ Movie not found: {s['movie']}")
+        if not theatre:
+            print(f"❌ Theatre not found: {s['theatre']}")
+
+# ============================================
+# 5. CREATE SEATS FOR ALL SHOWTIMES
+# ============================================
+for showtime in Showtime.objects.all():
+    seat_count = Seat.objects.filter(showtime=showtime).count()
+    if seat_count == 0:
+        rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+        for row in rows:
+            for number in range(1, 11):
+                Seat.objects.create(
+                    showtime=showtime,
+                    row=row,
+                    number=number,
+                    is_booked=False
+                )
+        print(f"✅ Created 100 seats for: {showtime.movie.title} at {showtime.theatre.name} ({showtime.show_date})")
+    else:
+        print(f"ℹ️ Seats already exist for: {showtime.movie.title} at {showtime.theatre.name}")
+
+# ============================================
+# 6. FINAL OUTPUT
+# ============================================
+print("\n" + "="*50)
+print("🎉 ALL DATA LOADED SUCCESSFULLY!")
+print("="*50)
+print(f"📽️ Movies: {Movie.objects.count()}")
+print(f"🎭 Theatres: {Theatre.objects.count()}")
+print(f"🕐 Showtimes: {Showtime.objects.count()}")
+print(f"💺 Seats: {Seat.objects.count()}")
+print("="*50)
+print("👉 Go to: http://127.0.0.1:8000/admin/")
 print("👉 Username: admin123")
 print("👉 Password: admin123")
-print("─────────────────────────────────────")
-
-from tickets.models import Showtime, Seat
-
-# Auto create seats for all showtimes
-for showtime in Showtime.objects.all():
-    # Create seats A1-A10, B1-B10 ... J1-J10
-    for row in 'ABCDEFGHIJ':
-        for number in range(1, 11):
-            Seat.objects.get_or_create(
-                showtime=showtime,
-                row=row,
-                number=number,
-                defaults={'is_booked': False}
-            )
-    print(f"✅ Seats created for: {showtime}")
-
-print("🎉 All seats created!")
+print("="*50)
