@@ -5,13 +5,18 @@ from datetime import date, time
 User = get_user_model()
 
 # ============================================
-# 1. CREATE SUPERUSER
+# 1. CREATE SHARED SUPERUSER (tharaka / tara123)
 # ============================================
-if not User.objects.filter(username='admin123').exists():
-    User.objects.create_superuser('admin123', 'admin@cinema.com', 'admin123')
-    print("✅ Superuser created → admin123 / admin123")
+if not User.objects.filter(username='tharaka').exists():
+    User.objects.create_superuser(
+        username='tharaka',
+        email='tharaka@cinema.com',
+        password='tara123',
+        role='admin'
+    )
+    print("✅ Shared superuser created → tharaka / tara123")
 else:
-    print("ℹ️ Superuser already exists")
+    print("ℹ️ Superuser tharaka already exists")
 
 # ============================================
 # 2. CREATE THEATRES
@@ -67,24 +72,18 @@ for m in movies_data:
 # ============================================
 # 4. CREATE SHOWTIMES
 # ============================================
-# Get all movies and theatres
 movies_dict = {m.title: m for m in Movie.objects.all()}
 theatres_dict = {t.name: t for t in Theatre.objects.all()}
 
 showtimes_data = [
-    # Scope Cinemas (Kandy)
     {"movie": "The Conjuring", "theatre": "Scope Cinemas", "show_date": date(2026, 4, 24), "show_time": time(19, 0), "price": 1500.00, "available_seats": 100},
     {"movie": "Inception", "theatre": "Scope Cinemas", "show_date": date(2026, 5, 1), "show_time": time(10, 0), "price": 1500.00, "available_seats": 98},
     {"movie": "Spider-Man: No Way Home", "theatre": "Scope Cinemas", "show_date": date(2026, 5, 1), "show_time": time(10, 0), "price": 1500.00, "available_seats": 100},
     {"movie": "Interstellar", "theatre": "Scope Cinemas", "show_date": date(2026, 5, 10), "show_time": time(19, 0), "price": 1500.00, "available_seats": 100},
-    
-    # Liberty Cinema (Negombo)
     {"movie": "Avengers: Endgame", "theatre": "Liberty Cinema", "show_date": date(2026, 4, 28), "show_time": time(15, 0), "price": 1000.00, "available_seats": 100},
     {"movie": "Doctor Strange", "theatre": "Liberty Cinema", "show_date": date(2026, 4, 30), "show_time": time(19, 0), "price": 1000.00, "available_seats": 100},
     {"movie": "The Lion King", "theatre": "Liberty Cinema", "show_date": date(2026, 5, 3), "show_time": time(10, 0), "price": 1000.00, "available_seats": 100},
     {"movie": "Inception", "theatre": "Liberty Cinema", "show_date": date(2026, 5, 1), "show_time": time(19, 0), "price": 1000.00, "available_seats": 100},
-    
-    # Savoy Cinema (Colombo)
     {"movie": "The Dark Knight", "theatre": "Savoy Cinema", "show_date": date(2026, 4, 29), "show_time": time(10, 0), "price": 1500.00, "available_seats": 100},
     {"movie": "Joker", "theatre": "Savoy Cinema", "show_date": date(2026, 4, 30), "show_time": time(16, 0), "price": 1500.00, "available_seats": 100},
 ]
@@ -145,6 +144,6 @@ print(f"🕐 Showtimes: {Showtime.objects.count()}")
 print(f"💺 Seats: {Seat.objects.count()}")
 print("="*50)
 print("👉 Go to: http://127.0.0.1:8000/admin/")
-print("👉 Username: admin123")
-print("👉 Password: admin123")
+print("👉 Username: tharaka")
+print("👉 Password: tara123")
 print("="*50)
