@@ -11,7 +11,7 @@ from .forms import RegisterForm
 
 
 def home(request):
-    movies = Movie.objects.filter(is_active=True)[:6]
+    movies = Movie.objects.filter(is_active=True)
     return render(request, 'tickets/home.html', {'movies': movies})
 
 
