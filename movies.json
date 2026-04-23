@@ -1,1 +1,80 @@
-[{"model": "tickets.movie", "pk": 1, "fields": {"title": "Inception", "description": "A thief who steals secrets through dream-sharing technology", "genre": "sci_fi", "duration_minutes": 148, "poster": "posters/i_HTG6qdt.webp", "release_date": "2026-04-22", "is_active": true}}]
+[
+{
+  "model": "tickets.movie",
+  "pk": 1,
+  "fields": {
+    "title": "Inception",
+    "description": "A thief who steals secrets through dream-sharing technology",
+    "genre": "sci_fi",
+    "duration_minutes": 148,
+    "poster_url": "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
+    "release_date": "2010-07-16",
+    "is_active": true
+  }
+},
+{
+  "model": "tickets.movie",
+  "pk": 2,
+  "fields": {
+    "title": "The Dark Knight",
+    "description": "Batman faces the Joker who wants to plunge Gotham into anarchy",
+    "genre": "action",
+    "duration_minutes": 152,
+    "poster_url": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+    "release_date": "2008-07-18",
+    "is_active": true
+  }
+},
+{
+  "model": "tickets.movie",
+  "pk": 3,
+  "fields": {
+    "title": "Interstellar",
+    "description": "A team of explorers travel through a wormhole in space",
+    "genre": "sci_fi",
+    "duration_minutes": 169,
+    "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+    "release_date": "2014-11-07",
+    "is_active": true
+  }
+},
+{
+  "model": "tickets.movie",
+  "pk": 4,
+  "fields": {
+    "title": "Avengers: Endgame",
+    "description": "The Avengers assemble once more to reverse Thanos' damage",
+    "genre": "action",
+    "duration_minutes": 181,
+    "poster_url": "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+    "release_date": "2019-04-26",
+    "is_active": true
+  }
+},
+{
+  "model": "tickets.movie",
+  "pk": 5,
+  "fields": {
+    "title": "Joker",
+    "description": "A failed comedian turns to a life of crime in Gotham City",
+    "genre": "drama",
+    "duration_minutes": 122,
+    "poster_url": "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
+    "release_date": "2019-10-04",
+    "is_active": true
+  }
+},
+{
+  "model": "tickets.movie",
+  "pk": 6,
+  "fields": {
+    "title": "Spider-Man: No Way Home",
+    "description": "Spider-Man seeks help from Doctor Strange unleashing multiverse chaos",
+    "genre": "action",
+    "duration_minutes": 148,
+    "poster_url": "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
+    "release_date": "2021-12-17",
+    "is_active": true
+  }
+}
+]

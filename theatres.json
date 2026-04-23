@@ -1,1 +1,29 @@
-[{"model": "tickets.theatre", "pk": 1, "fields": {"name": "Regal Cinemas", "location": "Downtown City Center", "total_seats": 100}}]
+[
+{
+  "model": "tickets.theatre",
+  "pk": 1,
+  "fields": {
+    "name": "Regal Cinemas",
+    "location": "Downtown City Center",
+    "total_seats": 100
+  }
+},
+{
+  "model": "tickets.theatre",
+  "pk": 2,
+  "fields": {
+    "name": "AMC Theatre",
+    "location": "Westside Mall",
+    "total_seats": 150
+  }
+},
+{
+  "model": "tickets.theatre",
+  "pk": 3,
+  "fields": {
+    "name": "Cineplex Grand",
+    "location": "North Plaza",
+    "total_seats": 200
+  }
+}
+]
