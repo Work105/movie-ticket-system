@@ -8,9 +8,7 @@ User = get_user_model()
 # 1. CREATE SUPERUSERS FOR ALL TEAMMATES
 # ============================================
 team_users = [
-    {"username": "admin123", "email": "admin@cinema.com",   "password": "admin123",  "first_name": "Admin"},
-    {"username": "tharaka",  "email": "tharaka@cinema.com", "password": "tara123",   "first_name": "Tharaka"},
-    {"username": "wimu",     "email": "wimu@cinema.com",    "password": "Wimu@1015",   "first_name": "Wimu"},
+     {"username": "wimu",     "email": "wimu@cinema.com",    "password": "Wimu@1015",   "first_name": "Wimu"},
 ]
 
 for team in team_users:
@@ -158,7 +156,5 @@ print(f"💺 Seats:     {Seat.objects.count()}")
 print("="*50)
 print("👉 Admin panel → http://127.0.0.1:8000/admin/")
 print()
-print("👤 admin123  / admin123")
-print("👤 tharaka   / tara123")
-print("👤 wimu      / wimu123")
+print("👤 wimu      / Wimu@1015")
 print("="*50)
