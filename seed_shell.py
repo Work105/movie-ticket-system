@@ -5,28 +5,18 @@ from datetime import date, time
 User = get_user_model()
 
 # ============================================
-# 1. CREATE SUPERUSERS FOR ALL TEAMMATES
+# 1. CREATE SHARED SUPERUSER (tharaka / tara123)
 # ============================================
-team_users = [
-     {"username": "wimu",     "email": "wimu@cinema.com",    "password": "Wimu@1015",   "first_name": "Wimu"},
-]
-
-for team in team_users:
-    if not User.objects.filter(username=team["username"]).exists():
-        u = User.objects.create_superuser(
-            username=team["username"],
-            email=team["email"],
-            password=team["password"],
-            first_name=team["first_name"]
-        )
-        print(f"✅ Created superuser: {team['username']}")
-    else:
-        u = User.objects.get(username=team["username"])
-        u.is_staff = True
-        u.is_superuser = True
-        u.first_name = team["first_name"]
-        u.save()
-        print(f"✅ Updated superuser: {team['username']}")
+if not User.objects.filter(username='tharaka').exists():
+    User.objects.create_superuser(
+        username='tharaka',
+        email='tharaka@cinema.com',
+        password='tara123',
+        role='admin'
+    )
+    print("✅ Shared superuser created → tharaka / tara123")
+else:
+    print("ℹ️ Superuser tharaka already exists")
 
 # ============================================
 # 2. CREATE THEATRES
@@ -45,7 +35,7 @@ for t in theatres_data:
     if created:
         print(f"✅ Theatre added: {t['name']}")
     else:
-        print(f"ℹ️  Theatre already exists: {t['name']}")
+        print(f"ℹ️ Theatre already exists: {t['name']}")
 
 # ============================================
 # 3. CREATE MOVIES
@@ -78,10 +68,9 @@ for m in movies_data:
     if created:
         print(f"✅ Movie added: {m['title']}")
     else:
-        # Update poster URL in case it changed
         movie.poster_url = m["poster_url"]
         movie.save()
-        print(f"ℹ️  Movie exists (poster updated): {m['title']}")
+        print(f"ℹ️ Movie exists (poster updated): {m['title']}")
 
 # ============================================
 # 4. CREATE SHOWTIMES
@@ -117,7 +106,7 @@ for s in showtimes_data:
         if created:
             print(f"✅ Showtime added: {s['movie']} @ {s['theatre']} — {s['show_date']} {s['show_time']}")
         else:
-            print(f"ℹ️  Showtime exists: {s['movie']} @ {s['theatre']}")
+            print(f"ℹ️ Showtime exists: {s['movie']} @ {s['theatre']}")
     else:
         if not movie:
             print(f"❌ Movie not found: {s['movie']}")
@@ -140,7 +129,7 @@ for showtime in Showtime.objects.all():
                 )
         print(f"✅ 100 seats created for: {showtime.movie.title} @ {showtime.theatre.name}")
     else:
-        print(f"ℹ️  Seats exist for: {showtime.movie.title} @ {showtime.theatre.name}")
+        print(f"ℹ️ Seats exist for: {showtime.movie.title} @ {showtime.theatre.name}")
 
 # ============================================
 # 6. FINAL SUMMARY
@@ -149,12 +138,12 @@ print("\n" + "="*50)
 print("🎉 ALL DATA LOADED SUCCESSFULLY!")
 print("="*50)
 print(f"👥 Users:     {User.objects.count()}")
-print(f"📽️  Movies:    {Movie.objects.count()}")
+print(f"📽️ Movies:    {Movie.objects.count()}")
 print(f"🎭 Theatres:  {Theatre.objects.count()}")
 print(f"🕐 Showtimes: {Showtime.objects.count()}")
 print(f"💺 Seats:     {Seat.objects.count()}")
 print("="*50)
 print("👉 Admin panel → http://127.0.0.1:8000/admin/")
-print()
-print("👤 wimu      / Wimu@1015")
+print("👉 Username: tharaka")
+print("👉 Password: tara123")
 print("="*50)
