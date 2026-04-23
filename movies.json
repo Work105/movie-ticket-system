@@ -76,5 +76,57 @@
     "release_date": "2021-12-17",
     "is_active": true
   }
+},
+{
+  "model": "tickets.movie",
+  "pk": 7,
+  "fields": {
+    "title": "The Lion King",
+    "description": "A young lion prince learns the true meaning of responsibility.",
+    "genre": "drama",
+    "duration_minutes": 118,
+    "poster_url": "https://image.tmdb.org/t/p/w500/2bXbqYdUdNVa8VIWXVfclP2ICtT.jpg",
+    "release_date": "2019-07-19",
+    "is_active": true
+  }
+},
+{
+  "model": "tickets.movie",
+  "pk": 8,
+  "fields": {
+    "title": "Doctor Strange",
+    "description": "A surgeon discovers the hidden world of magic and alternate dimensions.",
+    "genre": "action",
+    "duration_minutes": 115,
+    "poster_url": "https://image.tmdb.org/t/p/w500/xfWac8QYDf0tRkPcTtgjaeH3A8p.jpg",
+    "release_date": "2016-11-04",
+    "is_active": true
+  }
+},
+{
+  "model": "tickets.movie",
+  "pk": 9,
+  "fields": {
+    "title": "The Conjuring",
+    "description": "Paranormal investigators help a family terrorized by a dark presence.",
+    "genre": "horror",
+    "duration_minutes": 112,
+    "poster_url": "https://image.tmdb.org/t/p/w500/wVYREutTvI2tmxr6ujrHT704wGF.jpg",
+    "release_date": "2013-07-19",
+    "is_active": true
+  }
+},
+{
+  "model": "tickets.movie",
+  "pk": 10,
+  "fields": {
+    "title": "Frozen II",
+    "description": "Elsa and Anna journey to find the origin of Elsa's powers.",
+    "genre": "drama",
+    "duration_minutes": 103,
+    "poster_url": "https://upload.wikimedia.org/wikipedia/en/0/05/Frozen_II_%282019_film%29_poster.png",
+    "release_date": "2019-11-22",
+    "is_active": true
+  }
 }
 ]
