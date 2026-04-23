@@ -25,5 +25,59 @@
     "location": "North Plaza",
     "total_seats": 200
   }
+},
+{
+  "model": "tickets.theatre",
+  "pk": 4,
+  "fields": {
+    "name": "Scope Cinemas",
+    "location": "Kandy, Sri Lanka",
+    "total_seats": 120
+  }
+},
+{
+  "model": "tickets.theatre",
+  "pk": 5,
+  "fields": {
+    "name": "Liberty Cinema",
+    "location": "Negombo, Sri Lanka",
+    "total_seats": 80
+  }
+},
+{
+  "model": "tickets.theatre",
+  "pk": 6,
+  "fields": {
+    "name": "Savoy Cinema",
+    "location": "Colombo, Sri Lanka",
+    "total_seats": 100
+  }
+},
+{
+  "model": "tickets.theatre",
+  "pk": 7,
+  "fields": {
+    "name": "Majestic Cineplex",
+    "location": "Galle, Sri Lanka",
+    "total_seats": 150
+  }
+},
+{
+  "model": "tickets.theatre",
+  "pk": 8,
+  "fields": {
+    "name": "Empire Cinema",
+    "location": "Jaffna, Sri Lanka",
+    "total_seats": 120
+  }
+},
+{
+  "model": "tickets.theatre",
+  "pk": 9,
+  "fields": {
+    "name": "Lux Grand",
+    "location": "Colombo 07, Sri Lanka",
+    "total_seats": 200
+  }
 }
 ]
