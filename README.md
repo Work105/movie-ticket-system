@@ -201,14 +201,6 @@ http://127.0.0.1:8000/admin
 
 ---
 
-## ❓ Why No `seed.py`?
-
-The project previously used a `seed.py` script that tried to create a shared superuser. This caused problems because **`db.sqlite3` is a local file** — it is not shared between devices. Every teammate had a separate database, so the shared superuser credentials didn't work across machines, and running the script twice caused conflicts.
-
-**The fix:** Each teammate creates their own superuser locally with `python manage.py createsuperuser`. Movie, theatre, and showtime data is loaded cleanly from JSON fixture files instead.
-
-
-
 ## 👥 Team
 
 236007G as Work105
