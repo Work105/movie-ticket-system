@@ -21,7 +21,20 @@
 - ❌ Booking cancellation
 - 📋 Booking history for each user
 - 🛠️ Full Django Admin Panel for managing movies, showtimes & bookings
-- 📱 Responsive frontend with Bootstrap 5
+- 📱 Responsive frontend with Bootstrap 
+
+ ## 🛠️ Tech Stack
+
+| Layer       | Technology                       |
+|-------------|----------------------------------|
+| Backend     | Django 4.x (Python 3.10+)       |
+| Database    | SQLite3 (`db.sqlite3`)           |
+| Frontend    | HTML5, CSS3, Bootstrap           |
+| Auth System | Django Auth + Custom User Model  |
+| Admin Panel | Django Admin (`/admin`)          |
+| Data Load   | Django Fixtures (JSON files)     |
+| Environment | Python virtualenv (`venv/`)      |
+
 
 # 📁 Project Structure
 
@@ -77,7 +90,7 @@ movie-ticket-system/
 
 ## 🚀 Getting Started
 
-Follow these steps carefully to run the project locally.
+Follow these steps **carefully** to run the project on your local machine.
 
 ### Step 1 — Clone the Repository
 
@@ -86,20 +99,18 @@ git clone https://github.com/Work105/movie-ticket-system.git
 cd movie-ticket-system
 ```
 
-### Step 2 — Create \& Activate Virtual Environment
+### Step 2 — Create & Activate Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
 **Windows:**
-
 ```bash
-venv\\Scripts\\activate
+venv\Scripts\activate
 ```
 
 **macOS / Linux:**
-
 ```bash
 source venv/bin/activate
 ```
@@ -117,22 +128,42 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-### Step 5 — Seed the Database
+### Step 5 — Load Fixture Data
+
+Load theatres, movies, and showtimes from the JSON fixture files:
 
 ```bash
-python seed.py
+python manage.py loaddata theatres.json
+python manage.py loaddata movies.json
+python manage.py loaddata showtimes.json
+python manage.py loaddata seats.json
 ```
 
-This will automatically create:
+> ✅ This loads all pre-built data instantly without any seed script.
 
-* ✅ Admin superuser (`tharaka / tara123`)
-* ✅ 3 Theatres (Kandy, Negombo, Colombo)
-* ✅ 9 Popular movies with posters
-* ✅ 10 Showtimes across theatres
+### Step 6 — Create Your Own Admin Superuser
 
-> ✅ Safe to run multiple times — skips already existing records.
+> ⚠️ **Important:** Every teammate must create their own superuser locally.
+> This is because `db.sqlite3` is a **local file** — it is not shared between machines.
+> You cannot reuse another person's superuser on your device.
 
-### Step 6 — Run the Development Server
+```bash
+python manage.py createsuperuser
+```
+
+You will be prompted to enter:
+
+```
+Username: choose_any_username
+Email address: your@email.com
+Password: ********
+Password (again): ********
+Superuser created successfully.
+```
+
+> 💡 Pick any username and password you like — it only exists on **your machine**.
+
+### Step 7 — Run the Development Server
 
 ```bash
 python manage.py runserver
@@ -142,62 +173,39 @@ Visit the site → [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 \---
 
-## 🛡️ Admin Panel Setup — Step by Step
+## 🛡️ Admin Panel — Step by Step Login Guide
 
-The admin panel lets you manage all movies, theatres, showtimes, seats, and users.
+The admin panel gives you full control over movies, theatres, showtimes, seats, and users.
 
-### Option A — Use the Seeded Admin (Recommended for Team)
-
-After running `seed.py`, the shared admin account is already created. Skip to login.
-
-### Option B — Create a Local Superuser Manually
-
-If you want your own local superuser, run:
-
+**Step 1** — Start the server:
 ```bash
-python manage.py createsuperuser
+python manage.py runserver
 ```
 
-You will be prompted:
-
+**Step 2** — Open this URL in your browser:
 ```
-Username: your\_username
-Email address: your@email.com
-Password: \*\*\*\*\*\*\*\*
-Password (again): \*\*\*\*\*\*\*\*
-Superuser created successfully.
+http://127.0.0.1:8000/admin
 ```
 
-### 🔑 Log In to Admin Panel
+**Step 3** — Log in with the superuser credentials **you created** in Step 6 above.
 
-1. Make sure the server is running:
+**Step 4** — You now have full access to manage:
 
-```bash
-   python manage.py runserver
-   ```
+| Section      | What You Can Do                        |
+|--------------|----------------------------------------|
+| 🎬 Movies     | Add, edit, delete movies              |
+| 🏟️ Theatres   | Add, edit, delete theatres            |
+| 🗓️ Showtimes  | Schedule movie showtimes per theatre  |
+| 🪑 Seats      | Manage seat availability              |
+| 👥 Users      | View registered users and bookings    |
 
-2. Open your browser and go to:
+---
 
-```
-   http://127.0.0.1:8000/admin
-   ```
+## ❓ Why No `seed.py`?
 
-3. Enter your credentials:
+The project previously used a `seed.py` script that tried to create a shared superuser. This caused problems because **`db.sqlite3` is a local file** — it is not shared between devices. Every teammate had a separate database, so the shared superuser credentials didn't work across machines, and running the script twice caused conflicts.
 
-|Field|Value|
-|-|-|
-|Username|`tharaka`|
-|Password|`tara123`|
-
-4. You now have full access to manage:
-
-   * 🎬 Movies
-   * 🏟️ Theatres
-   * 🗓️ Showtimes
-   * 🪑 Seats
-   * 👥 Users \& Bookings
-
-> ⚠️ \*\*Team Note:\*\* All teammates use the shared account `tharaka / tara123`. Do \*\*not\*\* change this password without notifying the team.
+**The fix:** Each teammate creates their own superuser locally with `python manage.py createsuperuser`. Movie, theatre, and showtime data is loaded cleanly from JSON fixture files instead.
 
 
 
