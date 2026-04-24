@@ -83,7 +83,7 @@ movie-ticket-system/
 ├── movies.json                # Movie fixtures
 ├── showtimes.json             # Showtime fixtures
 ├── theatres.json              # Theatre fixtures
-├── seed.py                    # Database seeder script
+├── seats.json                   # Seats fixtures
 └── README.md
 
 ---
